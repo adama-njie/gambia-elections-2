@@ -1,11 +1,8 @@
 import { useState } from 'react';
-import { CANDIDATES_2026, REALIGNED_2026, getCandidate } from '@/data/candidates';
-import { COALITIONS, COALITION_MOVEMENTS, getParty } from '@/data/parties';
-import { POLLS, TIMELINE } from '@/data/polls';
-import { daysUntil, formatDate, formatDateRange, formatNumber, formatPercent } from '@/lib/format';
 import {
   Card,
   Citations,
+  EnglishOnlyGloss,
   Notice,
   PageHeader,
   ProvenanceBadge,
@@ -13,14 +10,21 @@ import {
   ShareBar,
   TabList,
 } from '@/components/ui';
+import { CANDIDATES_2026, REALIGNED_2026, getCandidate } from '@/data/candidates';
+import { COALITIONS, COALITION_MOVEMENTS, getParty } from '@/data/parties';
+import { POLLS, TIMELINE } from '@/data/polls';
+import { T, useT } from '@/i18n';
+import type { TranslationKey } from '@/i18n';
+import { daysUntil, formatDate, formatDateRange, formatNumber, formatPercent } from '@/lib/format';
 
-const COHESION_LABEL: Record<string, string> = {
-  formal: 'Signed agreement',
-  announced: 'Announced, terms not public',
-  contested: 'Disputed internally',
+const COHESION_LABEL: Record<string, TranslationKey> = {
+  formal: 'race.cohesion.formal',
+  announced: 'race.cohesion.announced',
+  contested: 'race.cohesion.contested',
 };
 
 function CoalitionCard({ id }: { id: string }) {
+  const t = useT();
   const coalition = COALITIONS.find((c) => c.id === id)!;
   const flagbearer = getCandidate(coalition.flagbearer);
   const movements = COALITION_MOVEMENTS[coalition.id] ?? [];
@@ -39,7 +43,10 @@ function CoalitionCard({ id }: { id: string }) {
         <div className="min-w-0">
           <h3 className="text-lg font-bold tracking-tight">{coalition.name}</h3>
           <p className="muted text-xs">
-            Formed {formatDate(coalition.formed)} &middot; {COHESION_LABEL[coalition.cohesion]}
+            {t('race.coalition.formed', {
+              date: formatDate(coalition.formed),
+              cohesion: t(COHESION_LABEL[coalition.cohesion]!),
+            })}
           </p>
         </div>
         <ProvenanceBadge provenance="reported" />
@@ -49,7 +56,10 @@ function CoalitionCard({ id }: { id: string }) {
         <div className="hairline mt-4 flex items-start gap-3 rounded-lg border p-3">
           <div
             className="mt-0.5 h-10 w-10 shrink-0 rounded-full"
-            style={{ backgroundColor: `${coalition.color}22`, border: `2px solid ${coalition.color}` }}
+            style={{
+              backgroundColor: `${coalition.color}22`,
+              border: `2px solid ${coalition.color}`,
+            }}
             aria-hidden="true"
           />
           <div className="min-w-0">
@@ -57,7 +67,7 @@ function CoalitionCard({ id }: { id: string }) {
             <p className="muted text-xs leading-snug">{flagbearer.role}</p>
             {flagbearer.status === 'prospective' && (
               <p className="mt-1 text-xs font-medium text-amber-700 dark:text-amber-300">
-                Flagbearer not yet publicly confirmed
+                {t('race.coalition.flagbearerUnconfirmed')}
               </p>
             )}
           </div>
@@ -67,7 +77,9 @@ function CoalitionCard({ id }: { id: string }) {
       <p className="mt-4 text-sm leading-relaxed">{coalition.summary}</p>
 
       <div className="mt-4">
-        <p className="muted text-xs font-semibold uppercase tracking-wide">Member parties</p>
+        <p className="muted text-xs font-semibold uppercase tracking-wide">
+          {t('race.coalition.members')}
+        </p>
         <ul className="mt-2 flex flex-wrap gap-1.5">
           {coalition.members.map((memberId) => {
             const party = getParty(memberId);
@@ -93,10 +105,16 @@ function CoalitionCard({ id }: { id: string }) {
 
       <div className="hairline mt-auto border-t pt-3">
         <p className="muted text-xs">
-          Combined 2021 vote of this bloc&rsquo;s components:{' '}
-          <span className="tabular font-semibold">
-            {share2021 > 0 ? formatPercent(share2021) : 'no prior presidential result'}
-          </span>
+          <T
+            k="race.coalition.combined2021"
+            vars={{
+              share: (
+                <span className="tabular font-semibold">
+                  {share2021 > 0 ? formatPercent(share2021) : t('race.coalition.noPrior')}
+                </span>
+              ),
+            }}
+          />
         </p>
         <Citations className="mt-2" ids={coalition.sources} />
       </div>
@@ -105,32 +123,27 @@ function CoalitionCard({ id }: { id: string }) {
 }
 
 export default function Race() {
+  const t = useT();
   const [tab, setTab] = useState<'blocs' | 'calendar' | 'polling'>('blocs');
   const independents = CANDIDATES_2026.filter((c) => !c.coalition);
 
   return (
     <div className="space-y-8">
-      <PageHeader
-        eyebrow="The field"
-        title="The 2026 race"
-        lede="Four blocs, formed between July and September 2026 after the all-party coalition talks collapsed. One consolidated incumbent alliance, three separate opposition platforms, and a nomination window that does not close until 14 November."
-      />
+      <PageHeader eyebrow={t('race.eyebrow')} title={t('race.title')} lede={t('race.lede')} />
 
-      <Notice tone="warn" title="No certified field exists yet">
-        Nominations run {formatDateRange('2026-11-03', '2026-11-14')}. Until the IEC publishes its
-        certified candidate list, every entry on this page is a declared or reported candidacy, and
-        alliance terms reported in the press may not match what is eventually filed. Several
-        agreements described here were not published in full by the parties to them.
+      <Notice tone="warn" title={t('race.notice.title')}>
+        <EnglishOnlyGloss />
+        {t('race.notice.body', { window: formatDateRange('2026-11-03', '2026-11-14') })}
       </Notice>
 
       <TabList
-        label="2026 race views"
+        label={t('race.tabs.label')}
         active={tab}
         onChange={setTab}
         tabs={[
-          { id: 'blocs', label: 'Blocs and candidates' },
-          { id: 'calendar', label: 'Election calendar' },
-          { id: 'polling', label: 'Polling' },
+          { id: 'blocs', label: t('race.tabs.blocs') },
+          { id: 'calendar', label: t('race.tabs.calendar') },
+          { id: 'polling', label: t('race.tabs.polling') },
         ]}
       />
 
@@ -144,8 +157,8 @@ export default function Race() {
 
           <Card>
             <SectionHeading
-              title="What changed since 2021"
-              subtitle="Two candidates who polled 14.32 per cent between them in 2021 are no longer standing"
+              title={t('race.changed.title')}
+              subtitle={t('race.changed.subtitle')}
               provenance="reported"
             />
             <div className="space-y-4">
@@ -156,32 +169,34 @@ export default function Race() {
                 >
                   <div className="min-w-0">
                     <p className="font-semibold">
-                      {person.name}{' '}
-                      <span className="muted font-normal">({person.party})</span>
+                      {person.name} <span className="muted font-normal">({person.party})</span>
                     </p>
                     <p className="muted mt-0.5 text-xs leading-relaxed">{person.note}</p>
                   </div>
                   <div className="shrink-0 text-right">
                     <p className="tabular text-lg font-bold">{formatPercent(person.share2021)}</p>
-                    <p className="muted text-xs">2021 vote &middot; joined {person.when}</p>
+                    <p className="muted text-xs">
+                      {t('race.changed.voteJoined', { when: person.when })}
+                    </p>
                   </div>
                 </div>
               ))}
             </div>
             <div className="hairline mt-4 rounded-lg border bg-primary/5 p-3 dark:bg-accent/10">
               <p className="text-sm leading-relaxed">
-                <strong>The arithmetic claim, and its limit.</strong> Added to the incumbent&rsquo;s
-                own 53.23 per cent, these blocs total{' '}
-                <strong>
-                  {formatPercent(
-                    53.23 + REALIGNED_2026.reduce((sum, r) => sum + r.share2021, 0),
-                  )}
-                </strong>{' '}
-                of the 2021 vote, which is the basis for the claim that the election is already
-                settled. The claim holds only if those votes transfer. An alliance is not a merger,
-                the GDC was explicit that it had not dissolved itself, and part of Essa
-                Faal&rsquo;s camp objected to the agreement. The forecast model treats transfer as
-                the open question it is.
+                <T
+                  k="race.changed.claimBody"
+                  vars={{
+                    claimTitle: <strong>{t('race.changed.claimTitle')}</strong>,
+                    total: (
+                      <strong>
+                        {formatPercent(
+                          53.23 + REALIGNED_2026.reduce((sum, r) => sum + r.share2021, 0),
+                        )}
+                      </strong>
+                    ),
+                  }}
+                />
               </p>
             </div>
             <Citations
@@ -193,9 +208,9 @@ export default function Race() {
           {independents.length > 0 && (
             <Card>
               <SectionHeading
-                title="Standing outside the blocs"
+                title={t('race.independents.title')}
                 provenance="reported"
-                subtitle="Declared candidacies not attached to any of the four platforms. Not separately modelled; folded into the residual."
+                subtitle={t('race.independents.subtitle')}
               />
               <div className="grid gap-3 sm:grid-cols-2">
                 {independents.map((candidate) => (
@@ -217,9 +232,9 @@ export default function Race() {
       {tab === 'calendar' && (
         <Card className="animate-fade-in">
           <SectionHeading
-            title="Election calendar"
+            title={t('race.calendar.title')}
             provenance="reported"
-            subtitle="Where outlets report conflicting windows, the later and more specific reporting is used and the conflict is noted. The IEC's own notices govern."
+            subtitle={t('race.calendar.subtitle')}
           />
           <ol className="relative space-y-6 border-l border-black/10 pl-6 dark:border-white/10">
             {TIMELINE.map((event) => {
@@ -239,7 +254,7 @@ export default function Race() {
                     <h3 className={`font-semibold ${past ? 'muted' : ''}`}>{event.title}</h3>
                     {!past && days <= 60 && (
                       <span className="rounded bg-primary/10 px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-primary dark:bg-accent/15 dark:text-accent">
-                        in {days} {days === 1 ? 'day' : 'days'}
+                        {t(days === 1 ? 'race.calendar.inDay' : 'race.calendar.inDays', { days })}
                       </span>
                     )}
                   </div>
@@ -255,12 +270,7 @@ export default function Race() {
 
       {tab === 'polling' && (
         <div className="space-y-6 animate-fade-in">
-          <Notice>
-            The Gambian polling market is thin: two published national surveys, from one
-            organisation, both carrying large undecided shares. Treat any single poll as weak
-            evidence. The forecast model lets you set polling weight to zero and see the structural
-            case on its own.
-          </Notice>
+          <Notice>{t('race.polling.notice')}</Notice>
           {[...POLLS].reverse().map((poll) => (
             <Card key={poll.id}>
               <SectionHeading
@@ -268,10 +278,14 @@ export default function Race() {
                 provenance="poll"
                 subtitle={
                   <>
-                    Fieldwork to {formatDate(poll.fieldworkEnd)} &middot; n=
-                    {formatNumber(poll.sampleSize)}
-                    {poll.marginOfError ? ` · ±${poll.marginOfError} points` : ''}
-                    {poll.commissionedBy ? ` · commissioned by ${poll.commissionedBy}` : ''}
+                    {t('race.poll.fieldwork', {
+                      date: formatDate(poll.fieldworkEnd),
+                      sample: formatNumber(poll.sampleSize),
+                    })}
+                    {poll.marginOfError ? t('race.poll.moe', { points: poll.marginOfError }) : ''}
+                    {poll.commissionedBy
+                      ? t('race.poll.commissionedBy', { organisation: poll.commissionedBy })
+                      : ''}
                   </>
                 }
               />
@@ -283,14 +297,19 @@ export default function Race() {
                     return (
                       <ShareBar
                         key={id}
-                        label={candidate?.name ?? 'Other candidates'}
+                        label={candidate?.name ?? t('common.otherCandidates')}
                         share={share}
                         color={candidate?.color ?? '#B0BEC5'}
                         max={40}
                       />
                     );
                   })}
-                <ShareBar label="Undecided" share={poll.undecided} color="#90A4AE" max={40} />
+                <ShareBar
+                  label={t('common.undecided')}
+                  share={poll.undecided}
+                  color="#90A4AE"
+                  max={40}
+                />
               </div>
               {poll.note && <p className="muted mt-3 text-xs leading-relaxed">{poll.note}</p>}
               <Citations className="mt-3" ids={poll.sources} />

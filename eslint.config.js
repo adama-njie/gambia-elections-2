@@ -19,4 +19,19 @@ export default tseslint.config(
       '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
     },
   },
+  {
+    // The service worker source. Not bundled: vite.config.ts substitutes
+    // __PRECACHE_FILES__ and friends at build time, so the placeholders are
+    // undefined identifiers here by design.
+    files: ['src/pwa/sw-template.js'],
+    extends: [js.configs.recommended],
+    languageOptions: {
+      ecmaVersion: 2022,
+      sourceType: 'module',
+      globals: { ...globals.serviceworker },
+    },
+    rules: {
+      'no-undef': ['error', { typeof: false }],
+    },
+  },
 );

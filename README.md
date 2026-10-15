@@ -35,8 +35,9 @@ election rather than be told who will win. Three principles shape it:
 - **Methodology** — the complete model specification, every coefficient, and the known limitations.
 - **Data** — provenance rules, CSV and JSON downloads, and all sources.
 
-Plus: dark mode, keyboard-navigable map, print styles, offline-capable, code-split routes, and a
-59-test suite that enforces the data contract.
+Plus: four interface languages, full offline support, dark mode, keyboard-navigable map, print
+styles, code-split routes, and a 98-test suite that enforces the data contract, the translation
+contract and the offline behaviour.
 
 ## The 2026 landscape
 
@@ -73,6 +74,7 @@ Then open <http://localhost:3000>.
 | `npm run test:watch` | Run tests in watch mode |
 | `npm run typecheck` | TypeScript, no emit |
 | `npm run lint` | ESLint |
+| `npm run icons` | Regenerate the PWA icons from `scripts/make-icons.mjs` |
 
 No environment variables and no API keys are needed. The app is fully static and routes with a hash
 router, so `dist/` deploys unchanged to GitHub Pages, any shared host, or a USB stick.
@@ -95,10 +97,101 @@ src/
     forecast.test.ts Model invariants
     rng.ts           Seeded RNG, so results are reproducible
     format.ts        Formatting and provenance labels
-  components/    Layout, shared UI, map, slider
+  i18n/
+    en.ts          The complete English dictionary — the source of truth
+    mnk.ts         Mandinka draft
+    wo.ts          Wolof draft
+    ff.ts          Pulaar draft
+    authoritative.ts  Keys that are always served in English, and why
+    core.ts        Locale registry and the explicit-fallback resolver
+    react.tsx      Provider, useT, and <T> for sentences containing links
+    i18n.test.ts   The translation contract, enforced
+  pwa/
+    sw-template.js Service worker source, templated at build time
+    useOffline.ts  Registration, update detection, cache-age reporting
+    sw.test.ts     Worker behaviour: precache, cleanup, offline fallback
+  components/    Layout, shared UI, map, slider, language switcher, offline notice
   pages/         The seven routes
   hooks/         Theme, URL-backed scenario state
 ```
+
+## Languages
+
+The interface ships in **English, Mandinka, Wolof and Pulaar**, switchable from the header and
+remembered per device. English is complete and is the source of truth: `src/i18n/en.ts` defines
+every key, and the type system makes it impossible to reference one that is not there.
+
+**The other three are unreviewed drafts, and they must be reviewed by native speakers before
+launch.** They were drafted without native-speaker review, they are labelled as drafts in the
+language switcher, and a banner on every page tells the reader exactly how much of the interface is
+actually in their language ("50 of 416 interface strings have a Wolof draft"). That number comes
+from `coverage()`, so it is a fact about the build and it falls as review proceeds.
+
+Three rules govern how the drafts behave, and they are enforced by `src/i18n/i18n.test.ts`:
+
+1. **Fallback is explicit, never silent.** Every lookup returns *why* it returned what it did —
+   `translated`, `fallback-en`, `english-authoritative` or `missing`. Longer analytical prose has no
+   draft and falls back to English by design; the reader is told, and the count says how often.
+2. **A gap beats a guess.** Where no confident rendering existed, the key is left out rather than
+   filled in. Mandinka and Pulaar deliberately do not yet translate *Modelled* or *Survey*: those
+   two words are what stop a projection being read as a count, and the English word is safer than a
+   wrong one. They are the highest-priority review targets in the repository.
+3. **The disclaimers stay in English.** The statistical and legal notices — "this is a projection,
+   not a prediction", "nothing on this platform is official", the area-data warnings — are listed in
+   `src/i18n/authoritative.ts` and are *always* served in English, even if a translation is added.
+   A mistranslated disclaimer is worse than an untranslated one. What a non-English reader gets
+   instead is a short, plain-language gloss in their own language ("This is not a result. Only the
+   IEC can say who has won."), rendered directly above the English wording, plus a note saying why
+   that block is in English.
+
+Exports (CSV, JSON) are always English whatever the interface language is. They are cited artefacts,
+and a column header that changes with a reader's language setting cannot be cited. Dates and numbers
+stay in `en-GB` for the same reason, and because no CLDR data exists for these three languages.
+
+### If you speak Mandinka, Wolof or Pulaar
+
+Reviewing one of `src/i18n/mnk.ts`, `wo.ts` or `ff.ts` is the single most useful contribution anyone
+can make to this project right now. Each file is a flat list of short strings with the English in
+`en.ts` beside it. Treat every entry as a question, not an assertion. Where a borrowing from English
+or French is what speakers actually use for a civic or statistical term, prefer the borrowing over a
+coined native word. Nothing outside these files encodes anything about the language, including its
+orthography.
+
+## Offline
+
+The app is an installable PWA that works fully offline after one visit — genuinely fully, because
+the forecast model runs on the device and the app makes no API calls at any point.
+
+- `src/pwa/sw-template.js` is the service worker; a ~40-line plugin in `vite.config.ts` bakes the
+  real hashed asset manifest into it at build time and writes `dist/sw.js`. Hand-rolled rather than
+  `vite-plugin-pwa` because the app is deliberately dependency-light and the only thing a generic
+  plugin would add here is that manifest.
+- **Every** build asset is precached, not just the entry chunk — about 830 kB uncompressed, roughly
+  250 kB over the wire, once. The routes are code-split, so precaching only the entry would leave
+  someone who installed from the Overview page without the Forecast page the moment they lost
+  signal.
+- Navigations are network-first with a short timeout and fall back to the cached shell; hashed
+  assets are cache-first; the Google Fonts stylesheet and its files are cached too, so the
+  typography does not collapse offline.
+- An update is downloaded in the background and **waits**: the app offers a reload rather than
+  swapping versions underneath a reader mid-sentence.
+
+### Honest staleness
+
+A cached copy is only useful if the reader knows how old it is. The worker records when it saved
+the copy, and the interface reports it:
+
+- the footer and the Data page always state when the dataset was last updated
+  (`src/data/freshness.ts`, maintained by hand — rebuilding the site does not make the figures
+  newer, so the build timestamp is never presented as a data date);
+- going offline raises a banner naming the date and time this copy was saved on this device;
+- past a week it says how many days ago that was and links to the IEC.
+
+If the save date cannot be determined, the interface says so rather than guessing.
+
+`src/pwa/sw.test.ts` executes the real worker source against a mock worker global and covers
+precaching, atomic install, old-cache cleanup, the offline shell fallback (including deep links),
+serving a lazily-loaded route chunk from cache, and the update handshake.
 
 ## The data contract
 
@@ -135,7 +228,8 @@ competitive. Its coefficients are reasoned priors, not fitted parameters. There 
 polls, from one organisation, both with large undecided shares. The candidate field is not certified
 until nominations close on 14 November 2026. No area-level results data exists publicly. The model
 does not attempt ethnic or linguistic modelling, and makes no attempt to quantify electoral
-integrity.
+integrity. The Mandinka, Wolof and Pulaar interface translations are unreviewed drafts and should
+not be treated as a translation until native speakers have checked them.
 
 ## Licence
 

@@ -1,0 +1,8 @@
+{
+  "name": "Gambia Election Visualizer & Predictor",
+  "description": "An interactive app to visualize Gambia's election results since 1996 and predict the 2026 presidential election outcome using historical data and socio-economic indicators.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

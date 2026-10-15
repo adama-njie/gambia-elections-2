@@ -1,58 +1,66 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Gambia Election Visualizer & Predictor</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Gambia Elections 2026 — Independent Civic Analytics</title>
+    <meta
+      name="description"
+      content="Independent, open-source analytics for The Gambia's 5 December 2026 presidential election: the verified record since 1996, the four contesting blocs, and a transparent forecasting model you can interrogate."
+    />
+    <meta name="theme-color" content="#1F6F8B" />
+    <meta name="color-scheme" content="light dark" />
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' rx='6' fill='%231F6F8B'/%3E%3Crect x='4' y='6' width='16' height='3.2' rx='1' fill='%23CE1126'/%3E%3Crect x='4' y='10.4' width='16' height='3.2' rx='1' fill='%23F5F5F5'/%3E%3Crect x='4' y='14.8' width='16' height='3.2' rx='1' fill='%233A7728'/%3E%3C/svg%3E" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Gambia Elections 2026 — Independent Civic Analytics" />
+    <meta
+      property="og:description"
+      content="The verified electoral record since 1996, the four blocs contesting 5 December 2026, and a transparent forecasting model. Not affiliated with the IEC."
+    />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+
     <script>
-      tailwind.config = {
-        theme: {
-          extend: {
-            colors: {
-              'primary': '#2F8FA8',       // Deep Blue/Teal
-              'secondary': '#37474F',     // Steel Gray
-              'accent': '#00ACC1',         // Teal
-              'accent-alt': '#F5B376',   // Orange
-              'background': '#F5F5F5',     // Off-white
-              'text-charcoal': '#212121',  // Charcoal text
-            },
-            animation: {
-              'fade-in': 'fadeIn 0.5s ease-in-out',
-              'slide-in-up': 'slideInUp 0.5s ease-in-out',
-            },
-            keyframes: {
-              fadeIn: {
-                '0%': { opacity: 0 },
-                '100%': { opacity: 1 },
-              },
-              slideInUp: {
-                '0%': { transform: 'translateY(20px)', opacity: 0 },
-                '100%': { transform: 'translateY(0)', opacity: 1 },
-              }
-            }
-          }
+      // Apply the stored theme before first paint, so there is no flash of
+      // the wrong colour scheme on load.
+      (function () {
+        try {
+          var stored = localStorage.getItem('gm26:theme');
+          var dark =
+            stored === 'dark' ||
+            (stored === null && window.matchMedia('(prefers-color-scheme: dark)').matches);
+          document.documentElement.dataset.theme = dark ? 'dark' : 'light';
+          if (dark) document.documentElement.classList.add('dark');
+        } catch (e) {
+          document.documentElement.dataset.theme = 'light';
         }
-      }
+      })();
     </script>
-    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-  <script type="importmap">
-{
-  "imports": {
-    "react": "https://aistudiocdn.com/react@^19.2.0",
-    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/",
-    "react/": "https://aistudiocdn.com/react@^19.2.0/",
-    "@google/genai": "https://aistudiocdn.com/@google/genai@^1.25.0",
-    "recharts": "https://aistudiocdn.com/recharts@^3.2.1"
-  }
-}
-</script>
-<link rel="stylesheet" href="/index.css">
-</head>
-  <body class="bg-background dark:bg-text-charcoal text-text-charcoal dark:text-background">
+  </head>
+  <body>
     <div id="root"></div>
-    <script type="module" src="/index.tsx"></script>
+    <noscript>
+      <div style="max-width: 40rem; margin: 4rem auto; padding: 0 1rem; font-family: system-ui, sans-serif; line-height: 1.6">
+        <h1>Gambia Elections 2026</h1>
+        <p>
+          This platform needs JavaScript to run its forecasting model in your browser. For official
+          election information, including the register, the certified candidate list and the
+          official results, go to the
+          <a href="https://iec.gm/">Independent Electoral Commission</a>.
+        </p>
+        <p>
+          <strong>The Gambia votes on 5 December 2026</strong> in a single-round presidential
+          election.
+        </p>
+      </div>
+    </noscript>
+    <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

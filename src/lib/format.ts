@@ -1,5 +1,16 @@
+import { en, type TranslationKey } from '@/i18n/en';
 import type { Provenance } from '@/types';
 
+/**
+ * Numbers and dates stay in en-GB regardless of the interface language.
+ *
+ * Mandinka, Wolof and Pulaar have no CLDR month names or number formats to
+ * draw on, so an Intl locale built from the language tag would silently fall
+ * back to the browser default, which on a phone configured in French would
+ * render a Wolof page's dates in French. One stable, documented format is
+ * more honest than that, and digits are read the same way in all four
+ * languages. Revisit if and when CLDR data lands.
+ */
 const numberFormat = new Intl.NumberFormat('en-GB');
 
 export function formatNumber(value: number): string {
@@ -33,21 +44,43 @@ export function formatDateRange(start: string, end?: string): string {
   return `${formatDate(start)} – ${formatDate(end)}`;
 }
 
+/**
+ * Provenance labels and help text, derived from the English dictionary so
+ * the two cannot drift apart.
+ *
+ * These are the English wordings, used where no React context is available:
+ * the CSV and JSON exports, and the data contract tests. Inside the
+ * interface, components read `prov.*.label` and `prov.*.help` through the
+ * i18n layer instead, so the badge follows the reader's language.
+ */
 export const PROVENANCE_LABEL: Record<Provenance, string> = {
-  official: 'Official',
-  reported: 'Reported',
-  modelled: 'Modelled',
-  poll: 'Survey',
+  official: en['prov.official.label'],
+  reported: en['prov.reported.label'],
+  modelled: en['prov.modelled.label'],
+  poll: en['prov.poll.label'],
 };
 
 export const PROVENANCE_HELP: Record<Provenance, string> = {
-  official: 'Published by the IEC or another primary official record.',
-  reported:
-    'The IEC announced these figures, but has not published them in a machine-readable archive. Recorded consistently by observer missions and standard secondary tables.',
-  modelled:
-    'Produced by this platform’s model from official inputs. Not a real-world observation. See Methodology.',
-  poll: 'Survey data from a named pollster, subject to its own margin of error.',
+  official: en['prov.official.help'],
+  reported: en['prov.reported.help'],
+  modelled: en['prov.modelled.help'],
+  poll: en['prov.poll.help'],
 };
+
+/** The i18n keys for a provenance level, for components that translate. */
+export const PROVENANCE_LABEL_KEY = {
+  official: 'prov.official.label',
+  reported: 'prov.reported.label',
+  modelled: 'prov.modelled.label',
+  poll: 'prov.poll.label',
+} as const satisfies Record<Provenance, TranslationKey>;
+
+export const PROVENANCE_HELP_KEY = {
+  official: 'prov.official.help',
+  reported: 'prov.reported.help',
+  modelled: 'prov.modelled.help',
+  poll: 'prov.poll.help',
+} as const satisfies Record<Provenance, TranslationKey>;
 
 /**
  * Win probabilities, never stated as a flat 0 or 100.

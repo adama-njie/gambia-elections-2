@@ -9,15 +9,30 @@ import {
   XAxis,
   YAxis,
 } from 'recharts';
-import { Card, Citations, PageHeader, SectionHeading, ShareBar, Stat, TabList } from '@/components/ui';
+import {
+  Card,
+  Citations,
+  PageHeader,
+  SectionHeading,
+  ShareBar,
+  Stat,
+  TabList,
+} from '@/components/ui';
 import { ELECTIONS } from '@/data/elections';
 import { PARTIES, getParty, partyColor } from '@/data/parties';
+import { useT } from '@/i18n';
 import { formatNumber, formatPercent } from '@/lib/format';
 
 /** Parties with enough presidential history to be worth a trend line. */
 const TRACKED = ['APRC', 'UDP', 'NPP', 'GDC', 'PDOIS', 'NRP', 'COALITION-2016'];
 
+/** Surnames are what the tiles have room for. */
+function surname(name: string): string {
+  return name.split(' ').slice(-1)[0] ?? name;
+}
+
 export default function History() {
+  const t = useT();
   const [year, setYear] = useState(ELECTIONS[ELECTIONS.length - 1]!.year);
   const [tab, setTab] = useState<'result' | 'trends' | 'competition'>('result');
   const election = ELECTIONS.find((e) => e.year === year)!;
@@ -57,25 +72,29 @@ export default function History() {
   return (
     <div className="space-y-6">
       <PageHeader
-        eyebrow="1996 to 2021"
-        title="The electoral record"
-        lede="Six presidential elections across two political systems. National figures are the IEC's announced totals as recorded by observer missions; the IEC has never published a machine-readable archive, which is why nothing here is labelled official."
+        eyebrow={t('history.eyebrow')}
+        title={t('history.title')}
+        lede={t('history.lede')}
       />
 
       <TabList
-        label="History views"
+        label={t('history.tabs.label')}
         active={tab}
         onChange={setTab}
         tabs={[
-          { id: 'result', label: 'Single election' },
-          { id: 'trends', label: 'Trends' },
-          { id: 'competition', label: 'Competitiveness' },
+          { id: 'result', label: t('history.tabs.result') },
+          { id: 'trends', label: t('history.tabs.trends') },
+          { id: 'competition', label: t('history.tabs.competition') },
         ]}
       />
 
       {tab === 'result' && (
         <div className="space-y-6 animate-fade-in">
-          <div className="no-print flex flex-wrap gap-2" role="group" aria-label="Select election year">
+          <div
+            className="no-print flex flex-wrap gap-2"
+            role="group"
+            aria-label={t('history.yearGroupLabel')}
+          >
             {ELECTIONS.map((e) => (
               <button
                 key={e.year}
@@ -95,47 +114,51 @@ export default function History() {
 
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             <Stat
-              label="Winner"
-              value={election.winner.split(' ').slice(-1)[0]}
+              label={t('history.stat.winner')}
+              value={surname(election.winner)}
               sub={getParty(election.winningParty)?.name}
               provenance={election.provenance}
               accent={partyColor(election.winningParty)}
             />
             <Stat
-              label="Winning share"
+              label={t('history.stat.winningShare')}
               value={formatPercent(election.national[0]!.share)}
-              sub={`Margin ${formatPercent(election.margin)}`}
+              sub={t('history.stat.marginSub', { margin: formatPercent(election.margin) })}
               provenance={election.provenance}
             />
             <Stat
-              label="Turnout"
-              value={election.turnout === null ? '—' : formatPercent(election.turnout)}
+              label={t('history.stat.turnout')}
+              value={election.turnout === null ? 'n/a' : formatPercent(election.turnout)}
               sub={
                 election.registeredVoters
-                  ? `${formatNumber(election.registeredVoters)} registered`
+                  ? t('history.stat.registeredSub', {
+                      registered: formatNumber(election.registeredVoters),
+                    })
                   : undefined
               }
               provenance={election.provenance}
             />
             <Stat
-              label="Valid votes"
-              value={election.validVotes ? formatNumber(election.validVotes) : '—'}
-              sub={`${election.national.length} candidates`}
+              label={t('history.stat.validVotes')}
+              value={election.validVotes ? formatNumber(election.validVotes) : 'n/a'}
+              sub={t('history.stat.candidatesSub', { count: election.national.length })}
               provenance={election.provenance}
             />
           </div>
 
           <Card>
+            {/* The election context is dataset content, cited and
+                provenance-tagged, so it is not interface copy. */}
             <SectionHeading
               title={election.context.title}
-              subtitle={`${election.year} presidential election`}
+              subtitle={t('history.context.subtitle', { year: election.year })}
               provenance={election.provenance}
             />
             <p className="text-sm leading-relaxed sm:text-base">{election.context.description}</p>
           </Card>
 
           <Card>
-            <SectionHeading title="National result" provenance={election.provenance} />
+            <SectionHeading title={t('history.national.title')} provenance={election.provenance} />
             <div className="space-y-4">
               {election.national.map((row) => (
                 <ShareBar
@@ -143,12 +166,14 @@ export default function History() {
                   label={
                     <>
                       {row.candidate}{' '}
-                      <span className="muted font-normal">{getParty(row.party)?.id ?? row.party}</span>
+                      <span className="muted font-normal">
+                        {getParty(row.party)?.id ?? row.party}
+                      </span>
                     </>
                   }
                   share={row.share}
                   color={partyColor(row.party)}
-                  secondary={`${formatNumber(row.votes)} votes`}
+                  secondary={t('history.national.votes', { votes: formatNumber(row.votes) })}
                 />
               ))}
             </div>
@@ -161,9 +186,9 @@ export default function History() {
         <div className="space-y-6 animate-fade-in">
           <Card>
             <SectionHeading
-              title="Party vote share, 1996 to 2021"
+              title={t('history.trends.title')}
               provenance="reported"
-              subtitle="Gaps mean the party did not contest that election. Note that the 2016 line is Coalition 2016, which Barrow led after resigning from the UDP, and the NPP line begins in 2021."
+              subtitle={t('history.trends.subtitle')}
             />
             <div className="h-80 w-full">
               <ResponsiveContainer width="100%" height="100%">
@@ -181,7 +206,7 @@ export default function History() {
                       key={party}
                       type="monotone"
                       dataKey={party}
-                      name={party === 'COALITION-2016' ? 'Coalition 2016' : party}
+                      name={party === 'COALITION-2016' ? t('history.coalition2016') : party}
                       stroke={partyColor(party)}
                       strokeWidth={2}
                       dot={{ r: 3 }}
@@ -195,18 +220,24 @@ export default function History() {
 
           <Card>
             <SectionHeading
-              title="Turnout, 1996 to 2021"
+              title={t('history.turnoutChart.title')}
               provenance="reported"
-              subtitle="Turnout has swung by more than thirty points between consecutive elections. Any forecast that treats it as stable is mis-specified."
+              subtitle={t('history.turnoutChart.subtitle')}
             />
             <div className="h-64 w-full">
               <ResponsiveContainer width="100%" height="100%">
                 <LineChart data={trendData} margin={{ top: 8, right: 16, left: 0, bottom: 4 }}>
                   <CartesianGrid strokeOpacity={0.12} />
                   <XAxis dataKey="year" tickLine={false} axisLine={false} fontSize={12} />
-                  <YAxis unit="%" tickLine={false} axisLine={false} fontSize={12} domain={[50, 95]} />
+                  <YAxis
+                    unit="%"
+                    tickLine={false}
+                    axisLine={false}
+                    fontSize={12}
+                    domain={[50, 95]}
+                  />
                   <Tooltip
-                    formatter={(value) => [`${Number(value).toFixed(1)}%`, 'Turnout']}
+                    formatter={(value) => [`${Number(value).toFixed(1)}%`, t('common.turnout')]}
                     contentStyle={{ borderRadius: 8, fontSize: 12 }}
                   />
                   <Line
@@ -227,20 +258,32 @@ export default function History() {
         <div className="space-y-6 animate-fade-in">
           <Card>
             <SectionHeading
-              title="The combined opposition vote"
+              title={t('history.competition.title')}
               provenance="reported"
-              subtitle="For each election: the winner's share, the sum of everyone else, and whether a single united opposition ticket would have outpolled the winner on those same votes."
+              subtitle={t('history.competition.subtitle')}
             />
             <div className="overflow-x-auto">
               <table className="w-full min-w-[44rem] text-sm">
                 <thead>
                   <tr className="hairline border-b text-left">
-                    <th scope="col" className="py-2 pr-3 font-semibold">Year</th>
-                    <th scope="col" className="py-2 pr-3 text-right font-semibold">Winner</th>
-                    <th scope="col" className="py-2 pr-3 text-right font-semibold">Rest combined</th>
-                    <th scope="col" className="py-2 pr-3 text-right font-semibold">Margin</th>
-                    <th scope="col" className="py-2 pr-3 text-right font-semibold">Candidates</th>
-                    <th scope="col" className="py-2 font-semibold">United ticket outpolls winner</th>
+                    <th scope="col" className="py-2 pr-3 font-semibold">
+                      {t('history.competition.colYear')}
+                    </th>
+                    <th scope="col" className="py-2 pr-3 text-right font-semibold">
+                      {t('history.competition.colWinner')}
+                    </th>
+                    <th scope="col" className="py-2 pr-3 text-right font-semibold">
+                      {t('history.competition.colRest')}
+                    </th>
+                    <th scope="col" className="py-2 pr-3 text-right font-semibold">
+                      {t('history.competition.colMargin')}
+                    </th>
+                    <th scope="col" className="py-2 pr-3 text-right font-semibold">
+                      {t('history.competition.colCandidates')}
+                    </th>
+                    <th scope="col" className="py-2 font-semibold">
+                      {t('history.competition.colUnited')}
+                    </th>
                   </tr>
                 </thead>
                 <tbody>
@@ -257,7 +300,9 @@ export default function History() {
                         <td className="tabular py-2 pr-3 text-right">
                           {formatPercent(row.oppositionTotal)}
                         </td>
-                        <td className="tabular py-2 pr-3 text-right">{formatPercent(row.margin)}</td>
+                        <td className="tabular py-2 pr-3 text-right">
+                          {formatPercent(row.margin)}
+                        </td>
                         <td className="tabular py-2 pr-3 text-right">{row.candidates}</td>
                         <td className="py-2">
                           <span
@@ -267,7 +312,7 @@ export default function History() {
                                 : 'bg-black/5 dark:bg-white/10'
                             }`}
                           >
-                            {row.wouldHaveWon ? 'Yes' : 'No'}
+                            {t(row.wouldHaveWon ? 'common.yes' : 'common.no')}
                           </span>
                         </td>
                       </tr>
@@ -276,18 +321,11 @@ export default function History() {
                 </tbody>
               </table>
             </div>
-            <p className="muted mt-4 text-xs leading-relaxed">
-              This is an arithmetic exercise, not a counterfactual. Votes are not transferable
-              property: in a consolidated race some supporters stay home and some switch sides,
-              which is exactly what the transfer and consolidation levers in the forecast model
-              represent. 2021 is the striking row — the combined opposition took 46.77 per cent
-              against the winner&rsquo;s 53.23, so even perfect unity would have fallen short,
-              while in 2016 unity was decisive at a margin of 3.65 points.
-            </p>
+            <p className="muted mt-4 text-xs leading-relaxed">{t('history.competition.note')}</p>
           </Card>
 
           <Card>
-            <SectionHeading title="Parties in the record" provenance="reported" />
+            <SectionHeading title={t('history.parties.title')} provenance="reported" />
             <div className="grid gap-3 sm:grid-cols-2">
               {PARTIES.filter((p) => p.profile).map((party) => (
                 <div key={party.id} className="hairline rounded-lg border p-3">
@@ -299,11 +337,19 @@ export default function History() {
                     />
                     <p className="font-semibold">
                       {party.id}{' '}
-                      {!party.active && <span className="muted text-xs font-normal">(inactive)</span>}
+                      {!party.active && (
+                        <span className="muted text-xs font-normal">
+                          {t('history.parties.inactive')}
+                        </span>
+                      )}
                     </p>
                   </div>
                   <p className="muted mt-0.5 text-xs">{party.name}</p>
-                  {party.leader && <p className="muted mt-0.5 text-xs">Leader: {party.leader}</p>}
+                  {party.leader && (
+                    <p className="muted mt-0.5 text-xs">
+                      {t('history.parties.leader', { leader: party.leader })}
+                    </p>
+                  )}
                   <p className="mt-1.5 text-sm leading-relaxed">{party.profile}</p>
                 </div>
               ))}

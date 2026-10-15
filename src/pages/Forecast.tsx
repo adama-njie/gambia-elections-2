@@ -15,6 +15,7 @@ import RegionMap, { RegionTable, type RegionDatum } from '@/components/RegionMap
 import Slider from '@/components/Slider';
 import {
   Card,
+  EnglishOnlyGloss,
   ModelDisclaimer,
   Notice,
   PageHeader,
@@ -25,6 +26,8 @@ import {
 import { getCandidate } from '@/data/candidates';
 import { REGIONS, regionName } from '@/data/regions';
 import { useScenario } from '@/hooks/useScenario';
+import { T, useT } from '@/i18n';
+import type { TranslationKey } from '@/i18n';
 import { MODEL_CONSTANTS, SCENARIO_PRESETS, runForecast } from '@/lib/forecast';
 import {
   downloadFile,
@@ -36,7 +39,29 @@ import {
 } from '@/lib/format';
 import type { RegionCode } from '@/types';
 
+/** Surnames are what the tiles and chart axis have room for. */
+function surname(name: string): string {
+  return name.split(' ').slice(-1)[0] ?? name;
+}
+
+/**
+ * Preset copy lives in the dictionary, keyed by preset id. A preset without
+ * an entry here falls back to the English text on the preset object itself,
+ * so adding one in src/lib/forecast.ts cannot break this page.
+ */
+const PRESET_KEYS: Record<string, { name: TranslationKey; description: TranslationKey }> = {
+  central: { name: 'preset.central.name', description: 'preset.central.description' },
+  arithmetic: { name: 'preset.arithmetic.name', description: 'preset.arithmetic.description' },
+  fragmented: { name: 'preset.fragmented.name', description: 'preset.fragmented.description' },
+  'cost-of-living': {
+    name: 'preset.cost-of-living.name',
+    description: 'preset.cost-of-living.description',
+  },
+  'late-unity': { name: 'preset.late-unity.name', description: 'preset.late-unity.description' },
+};
+
 export default function Forecast() {
+  const t = useT();
   const { params, set, setAll, reset, seed, isDefault } = useScenario();
   const [iterations, setIterations] = useState(10_000);
   const [selectedRegion, setSelectedRegion] = useState<RegionCode | null>(null);
@@ -51,7 +76,7 @@ export default function Forecast() {
   const runnerUp = forecast.blocs[1]!;
 
   const chartData = forecast.blocs.map((bloc) => ({
-    name: bloc.name.split(' ').slice(-1)[0],
+    name: surname(bloc.name),
     full: bloc.name,
     mean: Number(bloc.mean.toFixed(2)),
     color: bloc.color,
@@ -77,17 +102,22 @@ export default function Forecast() {
             value: formatPercent(region.shares[bloc.candidate] ?? 0),
             color: bloc.color,
           })),
-          { label: 'Lead', value: formatPercent(region.margin) },
-          { label: 'Projected votes', value: formatNumber(region.projectedVotes) },
+          { label: t('common.lead'), value: formatPercent(region.margin) },
+          { label: t('common.projectedVotes'), value: formatNumber(region.projectedVotes) },
         ],
       };
     }
     return out;
-  }, [forecast]);
+  }, [forecast, t]);
 
+  /**
+   * The export stays in English whatever the interface language is. It is a
+   * cited artefact: a column header that changes with a reader's language
+   * setting cannot be referenced in a correction or a methodology note.
+   */
   const exportCsv = () => {
     const rows: (string | number)[][] = [
-      ['Gambia Elections 2026 — model projection (NOT an official result)'],
+      ['Gambia Elections 2026: model projection (NOT an official result)'],
       ['Generated', new Date().toISOString()],
       ['Iterations', forecast.iterations],
       ['Seed', forecast.seed],
@@ -133,19 +163,19 @@ export default function Forecast() {
   return (
     <div className="space-y-6">
       <PageHeader
-        eyebrow="Scenario model"
-        title="2026 forecast"
+        eyebrow={t('forecast.eyebrow')}
+        title={t('forecast.title')}
         lede={
-          <>
-            A transparent Monte Carlo model, not an opinion. It runs entirely in your browser, needs
-            no API key, and produces the same numbers for the same inputs on any machine. Move a
-            lever and the projection moves for a reason you can read. Every assumption is documented
-            in the{' '}
-            <Link to="/methodology" className="font-semibold underline underline-offset-2">
-              methodology
-            </Link>
-            .
-          </>
+          <T
+            k="forecast.lede"
+            vars={{
+              methodology: (
+                <Link to="/methodology" className="font-semibold underline underline-offset-2">
+                  {t('forecast.lede.methodologyLink')}
+                </Link>
+              ),
+            }}
+          />
         }
       />
 
@@ -156,148 +186,153 @@ export default function Forecast() {
         <aside className="no-print space-y-6 xl:col-span-1">
           <Card>
             <SectionHeading
-              title="Scenarios"
-              subtitle="Start from a named scenario, then adjust."
+              title={t('forecast.scenarios.title')}
+              subtitle={t('forecast.scenarios.subtitle')}
             />
             <div className="space-y-2">
-              {SCENARIO_PRESETS.map((preset) => (
-                <button
-                  key={preset.id}
-                  type="button"
-                  onClick={() => setAll(preset.params)}
-                  className="hairline w-full rounded-lg border p-3 text-left transition hover:border-primary hover:bg-primary/5 dark:hover:border-accent dark:hover:bg-accent/10"
-                >
-                  <p className="text-sm font-semibold">{preset.name}</p>
-                  <p className="muted mt-0.5 text-xs leading-snug">{preset.description}</p>
-                </button>
-              ))}
+              {SCENARIO_PRESETS.map((preset) => {
+                const keys = PRESET_KEYS[preset.id];
+                return (
+                  <button
+                    key={preset.id}
+                    type="button"
+                    onClick={() => setAll(preset.params)}
+                    className="hairline w-full rounded-lg border p-3 text-left transition hover:border-primary hover:bg-primary/5 dark:hover:border-accent dark:hover:bg-accent/10"
+                  >
+                    <p className="text-sm font-semibold">
+                      {keys ? t(keys.name) : preset.name}
+                    </p>
+                    <p className="muted mt-0.5 text-xs leading-snug">
+                      {keys ? t(keys.description) : preset.description}
+                    </p>
+                  </button>
+                );
+              })}
             </div>
             <div className="mt-4 flex flex-wrap gap-2">
               <button type="button" onClick={copyLink} className="btn-ghost">
-                {copied ? 'Link copied' : 'Copy shareable link'}
+                {t(copied ? 'forecast.linkCopied' : 'forecast.copyLink')}
               </button>
               <button type="button" onClick={reset} className="btn-ghost" disabled={isDefault}>
-                Reset
+                {t('common.reset')}
               </button>
             </div>
-            <p className="muted mt-2 text-xs leading-snug">
-              The scenario lives in the page URL, so a link reproduces these exact figures.
-            </p>
+            <p className="muted mt-2 text-xs leading-snug">{t('forecast.urlNote')}</p>
           </Card>
 
           <Card>
             <SectionHeading
-              title="Coalition dynamics"
-              subtitle="The levers that decided 2016 and 2021."
+              title={t('forecast.group.coalition.title')}
+              subtitle={t('forecast.group.coalition.subtitle')}
             />
             <div className="space-y-5">
               <Slider
-                label="Alliance vote transfer"
+                label={t('lever.transferEfficiency.label')}
                 value={params.transferEfficiency}
                 onChange={(v) => set('transferEfficiency', v)}
                 min={0}
                 max={100}
                 unit="%"
-                help="How much of the GDC and APP-Sobeyaa 2021 vote actually turns out for the NPP flagbearer. 100% is the president's arithmetic claim; an alliance is not a merger."
+                help={t('lever.transferEfficiency.help')}
               />
               <Slider
-                label="Opposition consolidation"
+                label={t('lever.oppositionConsolidation.label')}
                 value={params.oppositionConsolidation}
                 onChange={(v) => set('oppositionConsolidation', v)}
                 min={0}
                 max={100}
                 unit="%"
-                help="How far the three opposition blocs stand down behind their strongest challenger. 0 keeps three tickets; 100 is a single flagbearer, as in 2016."
+                help={t('lever.oppositionConsolidation.help')}
               />
               <Slider
-                label="Undecided break to challengers"
+                label={t('lever.undecidedToChallengers.label')}
                 value={params.undecidedToChallengers}
                 onChange={(v) => set('undecidedToChallengers', v)}
                 min={0}
                 max={100}
                 unit="%"
-                help="The August 2026 poll left 17 per cent undecided — enough to change the order of finish on its own."
+                help={t('lever.undecidedToChallengers.help')}
               />
               <Slider
-                label="Weight on published polls"
+                label={t('lever.pollWeight.label')}
                 value={params.pollWeight}
                 onChange={(v) => set('pollWeight', v)}
                 min={0}
                 max={100}
                 unit="%"
-                help="0 uses only the 2021 result plus coalition arithmetic. 100 uses only the latest poll. Two published surveys is thin evidence either way."
+                help={t('lever.pollWeight.help')}
               />
             </div>
           </Card>
 
           <Card>
-            <SectionHeading title="Political conditions" />
+            <SectionHeading title={t('forecast.group.political.title')} />
             <div className="space-y-5">
               <Slider
-                label="Incumbent approval"
+                label={t('lever.incumbentApproval.label')}
                 value={params.incumbentApproval}
                 onChange={(v) => set('incumbentApproval', v)}
                 min={20}
                 max={80}
                 unit="%"
-                help="Approval of the incumbent's record in office."
+                help={t('lever.incumbentApproval.help')}
               />
               <Slider
-                label="Infrastructure record rating"
+                label={t('lever.infrastructureRating.label')}
                 value={params.infrastructureRating}
                 onChange={(v) => set('infrastructureRating', v)}
                 min={20}
                 max={95}
                 unit="%"
-                help="Public rating of the roads, bridges and energy programme the NPP campaigns on."
+                help={t('lever.infrastructureRating.help')}
               />
               <Slider
-                label="National turnout"
+                label={t('lever.turnout.label')}
                 value={params.turnout}
                 onChange={(v) => set('turnout', v)}
                 min={55}
                 max={95}
                 step={0.5}
                 unit="%"
-                help="89.3 per cent in 2021; 59.3 per cent in 2016. Turnout in The Gambia swings enormously."
+                help={t('lever.turnout.help')}
               />
               <Slider
-                label="Extra youth turnout"
+                label={t('lever.youthTurnoutSwing.label')}
                 value={params.youthTurnoutSwing}
                 onChange={(v) => set('youthTurnoutSwing', v)}
                 min={-10}
                 max={20}
-                unit=" pts"
-                help="Under-35 turnout relative to the national figure. Most of this effect accrues to UNITE."
+                unit={t('lever.unit.points')}
+                help={t('lever.youthTurnoutSwing.help')}
               />
               <Slider
-                label="New and diaspora voters"
+                label={t('lever.newVoterEffect.label')}
                 value={params.newVoterEffect}
                 onChange={(v) => set('newVoterEffect', v)}
                 min={0}
                 max={8}
                 step={0.5}
-                unit=" pts"
-                help="Net points off the incumbent from first-time registrants and diaspora participation."
+                unit={t('lever.unit.points')}
+                help={t('lever.newVoterEffect.help')}
               />
             </div>
           </Card>
 
           <Card>
-            <SectionHeading title="Economic conditions" />
+            <SectionHeading title={t('forecast.group.economic.title')} />
             <div className="space-y-5">
               <Slider
-                label="Inflation"
+                label={t('lever.inflation.label')}
                 value={params.inflation}
                 onChange={(v) => set('inflation', v)}
                 min={2}
                 max={30}
                 step={0.5}
                 unit="%"
-                help="Headline annual inflation. The strongest single economic term in the model."
+                help={t('lever.inflation.help')}
               />
               <Slider
-                label="Real GDP growth"
+                label={t('lever.gdpGrowth.label')}
                 value={params.gdpGrowth}
                 onChange={(v) => set('gdpGrowth', v)}
                 min={-6}
@@ -306,7 +341,7 @@ export default function Forecast() {
                 unit="%"
               />
               <Slider
-                label="Youth unemployment"
+                label={t('lever.youthUnemployment.label')}
                 value={params.youthUnemployment}
                 onChange={(v) => set('youthUnemployment', v)}
                 min={15}
@@ -317,18 +352,18 @@ export default function Forecast() {
           </Card>
 
           <Card>
-            <SectionHeading title="Simulation" />
+            <SectionHeading title={t('forecast.group.simulation.title')} />
             <Slider
-              label="Iterations"
+              label={t('lever.iterations.label')}
               value={iterations}
               onChange={setIterations}
               min={1_000}
               max={50_000}
               step={1_000}
               format={(v) => formatNumber(v)}
-              help="More iterations give smoother intervals. Results are seeded, so they are reproducible at any count."
+              help={t('lever.iterations.help')}
             />
-            <p className="muted mt-3 text-xs">Seed {forecast.seed}.</p>
+            <p className="muted mt-3 text-xs">{t('forecast.seedNote', { seed: forecast.seed })}</p>
           </Card>
         </aside>
 
@@ -336,34 +371,39 @@ export default function Forecast() {
         <div className="space-y-6 xl:col-span-2">
           <div className="grid gap-4 sm:grid-cols-3">
             <Stat
-              label="Model leader"
-              value={leader.name.split(' ').slice(-1)[0]}
-              sub={`${formatPercent(leader.mean)} central estimate`}
+              label={t('forecast.stat.modelLeader')}
+              value={surname(leader.name)}
+              sub={t('forecast.stat.centralEstimate', { share: formatPercent(leader.mean) })}
               provenance="modelled"
               accent={leader.color}
             />
             <Stat
-              label="Leads in"
+              label={t('forecast.stat.leadsIn')}
               value={formatProbability(leader.winProbability)}
-              sub={`of ${formatNumber(forecast.iterations)} simulations`}
+              sub={t('forecast.stat.ofSimulations', {
+                iterations: formatNumber(forecast.iterations),
+              })}
               provenance="modelled"
             />
             <Stat
-              label="Projected lead"
+              label={t('forecast.stat.projectedLead')}
               value={formatPercent(forecast.expectedMargin)}
-              sub={`over ${runnerUp.name.split(' ').slice(-1)[0]} · ${formatProbability(forecast.tooCloseToCall)} of runs under 2 pts`}
+              sub={t('forecast.stat.projectedLeadSub', {
+                runnerUp: surname(runnerUp.name),
+                tooClose: formatProbability(forecast.tooCloseToCall),
+              })}
               provenance="modelled"
             />
           </div>
 
           <Card>
             <SectionHeading
-              title="Projected national vote share"
+              title={t('forecast.chart.title')}
               provenance="modelled"
-              subtitle="Bars are the central estimate; whiskers show the 80 per cent credible interval."
+              subtitle={t('forecast.chart.subtitle')}
               action={
                 <button type="button" onClick={exportCsv} className="btn-ghost">
-                  Export CSV
+                  {t('forecast.exportCsv')}
                 </button>
               }
             />
@@ -380,7 +420,10 @@ export default function Forecast() {
                     domain={[0, 'dataMax + 8']}
                   />
                   <Tooltip
-                    formatter={(value) => [`${Number(value).toFixed(1)}%`, 'Central estimate']}
+                    formatter={(value) => [
+                      `${Number(value).toFixed(1)}%`,
+                      t('forecast.chart.centralEstimate'),
+                    ]}
                     labelFormatter={(_label, payload) => payload?.[0]?.payload?.full ?? ''}
                     contentStyle={{ borderRadius: 8, fontSize: 12 }}
                   />
@@ -405,7 +448,13 @@ export default function Forecast() {
                   }
                   share={bloc.mean}
                   color={bloc.color}
-                  secondary={`80% ${formatPercent(bloc.p10)}–${formatPercent(bloc.p90)} · 95% ${formatPercent(bloc.p2_5)}–${formatPercent(bloc.p97_5)} · leads in ${formatProbability(bloc.winProbability)} of runs`}
+                  secondary={t('forecast.bloc.secondary', {
+                    p10: formatPercent(bloc.p10),
+                    p90: formatPercent(bloc.p90),
+                    p2_5: formatPercent(bloc.p2_5),
+                    p97_5: formatPercent(bloc.p97_5),
+                    probability: formatProbability(bloc.winProbability),
+                  })}
                 />
               ))}
             </div>
@@ -413,9 +462,9 @@ export default function Forecast() {
 
           <Card>
             <SectionHeading
-              title="What is moving this projection"
+              title={t('forecast.drivers.title')}
               provenance="modelled"
-              subtitle="Each driver's effect on the incumbent's share, in percentage points, relative to the model's reference conditions."
+              subtitle={t('forecast.drivers.subtitle')}
             />
             <ul className="space-y-2">
               {forecast.drivers.map((driver) => {
@@ -423,6 +472,9 @@ export default function Forecast() {
                 const helps = driver.effect >= 0;
                 return (
                   <li key={driver.label} className="flex items-center gap-3 text-sm">
+                    {/* Driver labels come from the model, which names them in
+                        English; translating them would mean keying off model
+                        internals. Tracked as a follow-up. */}
                     <span className="w-44 shrink-0 truncate">{driver.label}</span>
                     <span className="relative h-2 flex-1 rounded-full bg-black/[.06] dark:bg-white/10">
                       <span className="absolute inset-y-0 left-1/2 w-px bg-black/20 dark:bg-white/20" />
@@ -443,44 +495,44 @@ export default function Forecast() {
               })}
             </ul>
             <p className="muted mt-3 text-xs leading-relaxed">
-              Blue favours the incumbent alliance, orange favours the challengers. These are the
-              fundamentals only: the coalition-structure levers act on the baseline itself, not as a
-              swing, so they do not appear here. Total fundamentals swing:{' '}
-              {formatSigned(forecast.drivers.reduce((a, d) => a + d.effect, 0))} points.
+              {t('forecast.drivers.note', {
+                total: formatSigned(forecast.drivers.reduce((a, d) => a + d.effect, 0)),
+              })}
             </p>
           </Card>
 
           <Card>
             <SectionHeading
-              title="Projection by administrative area"
+              title={t('forecast.areas.title')}
               provenance="modelled"
-              subtitle="Uniform national swing applied to the modelled 2021 area baseline, with the UNITE share of the UDP base scaled by urbanisation. Shading reflects the size of the lead."
+              subtitle={t('forecast.areas.subtitle')}
             />
             <Notice tone="warn">
-              No official area-level results dataset exists in the public record for any Gambian
-              presidential election. These areas start from a <strong>modelled</strong> 2021
-              baseline, not a published one. Treat the national figures as far more reliable than
-              any single area.
+              <EnglishOnlyGloss />
+              <T
+                k="forecast.areas.notice"
+                vars={{ modelled: <strong>{t('forecast.areas.noticeModelled')}</strong> }}
+              />
             </Notice>
             <div className="mt-4 grid gap-6 lg:grid-cols-2">
               <RegionMap
                 data={mapData}
                 selected={selectedRegion}
                 onSelect={setSelectedRegion}
-                caption="Projected leading bloc by administrative area"
+                caption={t('forecast.areas.mapCaption')}
               />
               <div>
                 <RegionTable
                   data={mapData}
-                  columns={[...forecast.blocs.map((b) => b.name), 'Lead']}
-                  caption="Projected vote share by administrative area and bloc"
+                  columns={[...forecast.blocs.map((b) => b.name), t('common.lead')]}
+                  caption={t('forecast.areas.tableCaption')}
                 />
                 <p className="muted mt-3 text-xs">
-                  Total projected valid votes: {formatNumber(forecast.projectedTurnoutVotes)}, from
-                  an assumed 2026 register of{' '}
-                  {formatNumber(MODEL_CONSTANTS.assumedRegister2026)} at{' '}
-                  {formatPercent(params.turnout)} turnout. The IEC has not published the final
-                  register, so this figure is an assumption.
+                  {t('forecast.areas.votesNote', {
+                    votes: formatNumber(forecast.projectedTurnoutVotes),
+                    register: formatNumber(MODEL_CONSTANTS.assumedRegister2026),
+                    turnout: formatPercent(params.turnout),
+                  })}
                 </p>
               </div>
             </div>
@@ -489,11 +541,15 @@ export default function Forecast() {
           {selectedRegion && (
             <Card>
               <SectionHeading
-                title={`${regionName(selectedRegion)} in detail`}
+                title={t('forecast.region.title', { region: regionName(selectedRegion) })}
                 provenance="modelled"
                 action={
-                  <button type="button" onClick={() => setSelectedRegion(null)} className="btn-ghost">
-                    Clear
+                  <button
+                    type="button"
+                    onClick={() => setSelectedRegion(null)}
+                    className="btn-ghost"
+                  >
+                    {t('common.clear')}
                   </button>
                 }
               />
@@ -504,19 +560,19 @@ export default function Forecast() {
                   <>
                     <div className="mb-4 grid gap-3 sm:grid-cols-3">
                       <Stat
-                        label="Projected votes"
+                        label={t('forecast.region.projectedVotes')}
                         value={formatNumber(region.projectedVotes)}
                         provenance="modelled"
                       />
                       <Stat
-                        label="2021 register"
+                        label={t('forecast.region.register2021')}
                         value={formatNumber(meta.registeredVoters2021)}
                         provenance="reported"
                       />
                       <Stat
-                        label="Constituencies"
+                        label={t('forecast.region.constituencies')}
                         value={meta.constituencies}
-                        sub={`Seat: ${meta.seat}`}
+                        sub={t('forecast.region.seat', { seat: meta.seat })}
                         provenance="reported"
                       />
                     </div>

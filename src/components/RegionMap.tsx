@@ -1,6 +1,7 @@
 import React, { useId, useState } from 'react';
 import { MAP_VIEWBOX, REGION_SHAPES, RIVER } from '@/data/mapGeometry';
 import { REGIONS } from '@/data/regions';
+import { useT } from '@/i18n';
 import type { RegionCode } from '@/types';
 
 export interface RegionDatum {
@@ -35,6 +36,7 @@ export default function RegionMap({
   selected?: RegionCode | null;
   onSelect?: (code: RegionCode | null) => void;
 }) {
+  const t = useT();
   const [hovered, setHovered] = useState<RegionCode | null>(null);
   const titleId = useId();
 
@@ -66,9 +68,7 @@ export default function RegionMap({
         onMouseLeave={() => setHovered(null)}
       >
         <title id={titleId}>
-          {caption ?? 'Schematic map of The Gambia by administrative area'}. Areas are shown in
-          their approximate positions along the River Gambia, not to scale. The same figures are
-          listed in the table beside the map.
+          {t('map.title', { caption: caption ?? t('map.defaultCaption') })}
         </title>
 
         {/* The river, for orientation. */}
@@ -86,7 +86,7 @@ export default function RegionMap({
           textAnchor="end"
           className="fill-sky-900/50 text-[15px] font-medium tracking-wide dark:fill-sky-200/40"
         >
-          River Gambia
+          {t('map.river')}
         </text>
 
         {REGIONS.map((region) => {
@@ -118,10 +118,12 @@ export default function RegionMap({
                 aria-pressed={isSelected}
                 aria-label={
                   datum
-                    ? `${region.name}: ${datum.label}. ${datum.detail
-                        .map((d) => `${d.label} ${d.value}`)
-                        .join(', ')}`
-                    : `${region.name}: no data`
+                    ? t('map.areaAria', {
+                        region: region.name,
+                        label: datum.label,
+                        detail: datum.detail.map((d) => `${d.label} ${d.value}`).join(', '),
+                      })
+                    : t('map.areaNoData', { region: region.name })
                 }
                 className="cursor-pointer transition-[fill-opacity] focus:outline-none focus-visible:stroke-accent focus-visible:[stroke-width:4]"
                 onMouseEnter={() => setHovered(region.code)}
@@ -184,9 +186,7 @@ export default function RegionMap({
 
       <figcaption className="muted mt-2 text-xs leading-relaxed">
         {caption && <span className="block">{caption}</span>}
-        Schematic, not to scale: areas are placed in their approximate positions along the river and
-        sized for legibility, so that Banjul and Kanifing remain visible. Use arrow keys to move
-        between areas.
+        {t('map.figcaption')}
       </figcaption>
     </figure>
   );
@@ -202,6 +202,7 @@ export function RegionTable({
   columns: string[];
   caption: string;
 }) {
+  const t = useT();
   return (
     <div className="overflow-x-auto">
       <table className="w-full min-w-[30rem] text-sm">
@@ -209,10 +210,10 @@ export function RegionTable({
         <thead>
           <tr className="hairline border-b text-left">
             <th scope="col" className="py-2 pr-3 font-semibold">
-              Area
+              {t('map.colArea')}
             </th>
             <th scope="col" className="py-2 pr-3 font-semibold">
-              Leading
+              {t('map.colLeading')}
             </th>
             {columns.map((column) => (
               <th key={column} scope="col" className="py-2 pr-3 text-right font-semibold">
@@ -237,14 +238,14 @@ export function RegionTable({
                       style={{ backgroundColor: datum?.color ?? '#CFD8DC' }}
                       aria-hidden="true"
                     />
-                    {datum?.label ?? '—'}
+                    {datum?.label ?? 'n/a'}
                   </span>
                 </td>
                 {columns.map((column) => {
                   const cell = datum?.detail.find((d) => d.label === column);
                   return (
                     <td key={column} className="tabular py-2 pr-3 text-right">
-                      {cell?.value ?? '—'}
+                      {cell?.value ?? 'n/a'}
                     </td>
                   );
                 })}

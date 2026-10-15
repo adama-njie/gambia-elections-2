@@ -1,7 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { getSources } from '@/data/sources';
-import { PROVENANCE_HELP, PROVENANCE_LABEL, formatPercent } from '@/lib/format';
+import { T, useI18n, useT } from '@/i18n';
+import { PROVENANCE_HELP_KEY, PROVENANCE_LABEL_KEY, formatPercent } from '@/lib/format';
 import type { Provenance } from '@/types';
 
 /* ------------------------------------------------------------------ */
@@ -19,6 +20,11 @@ const PROVENANCE_STYLE: Record<Provenance, string> = {
  * The single most important component in the app. Any figure that is not a
  * primary official record has to wear one of these, so a reader can never
  * mistake a projection for a result.
+ *
+ * These four words are the first thing any translation has to get right. A
+ * locale that has not translated "Modelled" shows the English word rather
+ * than a guess, which is a gap a reader can see; a wrong rendering is a gap
+ * nobody can see.
  */
 export function ProvenanceBadge({
   provenance,
@@ -27,12 +33,13 @@ export function ProvenanceBadge({
   provenance: Provenance;
   className?: string;
 }) {
+  const t = useT();
   return (
     <span
       className={`inline-flex items-center rounded px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide ${PROVENANCE_STYLE[provenance]} ${className}`}
-      title={PROVENANCE_HELP[provenance]}
+      title={t(PROVENANCE_HELP_KEY[provenance])}
     >
-      {PROVENANCE_LABEL[provenance]}
+      {t(PROVENANCE_LABEL_KEY[provenance])}
     </span>
   );
 }
@@ -60,7 +67,7 @@ export function SectionHeading({
   action,
   id,
 }: {
-  title: string;
+  title: React.ReactNode;
   subtitle?: React.ReactNode;
   provenance?: Provenance;
   action?: React.ReactNode;
@@ -89,8 +96,8 @@ export function PageHeader({
   lede,
   children,
 }: {
-  eyebrow?: string;
-  title: string;
+  eyebrow?: React.ReactNode;
+  title: React.ReactNode;
   lede?: React.ReactNode;
   children?: React.ReactNode;
 }) {
@@ -119,7 +126,7 @@ export function Stat({
   provenance,
   accent,
 }: {
-  label: string;
+  label: React.ReactNode;
   value: React.ReactNode;
   sub?: React.ReactNode;
   provenance?: Provenance;
@@ -196,11 +203,14 @@ export function ShareBar({
 /* ------------------------------------------------------------------ */
 
 export function Citations({ ids, className = '' }: { ids: string[]; className?: string }) {
+  const t = useT();
   const sources = getSources(ids);
   if (sources.length === 0) return null;
   return (
     <p className={`muted text-xs leading-relaxed ${className}`}>
-      <span className="font-semibold">Sources: </span>
+      {/* Publisher names are cited material, not interface copy, so they
+          are never translated. */}
+      <span className="font-semibold">{t('common.sources')}</span>
       {sources.map((source, index) => (
         <React.Fragment key={source.id}>
           {index > 0 && '; '}
@@ -228,7 +238,7 @@ export function Notice({
   children,
 }: {
   tone?: 'info' | 'warn';
-  title?: string;
+  title?: React.ReactNode;
   children: React.ReactNode;
 }) {
   const style =
@@ -243,18 +253,48 @@ export function Notice({
   );
 }
 
+/**
+ * The translated gloss that precedes an English-only notice.
+ *
+ * The statistical and legal disclaimers are listed in
+ * `src/i18n/authoritative.ts` and are always served in English, because an
+ * unreviewed draft of "this is not a certified result" is worse than no
+ * translation at all. What a non-English reader gets instead is this: the
+ * one sentence that matters, in plain language, in their language, directly
+ * above the authoritative English wording, plus a note saying why that
+ * wording is in English.
+ *
+ * Render it inside any `Notice` whose body is an authoritative key.
+ */
+export function EnglishOnlyGloss() {
+  const t = useT();
+  const { locale } = useI18n();
+  if (locale === 'en') return null;
+  return (
+    <div className="mb-3 rounded-lg border border-current/20 bg-white/50 p-3 dark:bg-black/20">
+      <p className="font-semibold">{t('disclaimer.gloss.title')}</p>
+      <p className="mt-0.5">{t('disclaimer.gloss.body')}</p>
+      <p className="mt-2 text-xs opacity-80">{t('disclaimer.englishOnly.note')}</p>
+    </div>
+  );
+}
+
 /** The standing disclaimer. Rendered in the footer of every page. */
 export function ModelDisclaimer() {
+  const t = useT();
   return (
-    <Notice tone="warn" title="This is a projection, not a prediction of the result">
-      Forecasts on this platform are produced by an openly documented statistical model from
-      historical results, published polling and user-set assumptions. They are not forecasts of
-      certified results, they are not endorsed by the Independent Electoral Commission, and they
-      should never be cited as a count. Only the IEC can declare a result. Read the{' '}
-      <Link to="/methodology" className="font-semibold underline underline-offset-2">
-        methodology
-      </Link>{' '}
-      before quoting any figure.
+    <Notice tone="warn" title={t('disclaimer.model.title')}>
+      <EnglishOnlyGloss />
+      <T
+        k="disclaimer.model.body"
+        vars={{
+          methodology: (
+            <Link to="/methodology" className="font-semibold underline underline-offset-2">
+              {t('disclaimer.model.methodologyLink')}
+            </Link>
+          ),
+        }}
+      />
     </Notice>
   );
 }
@@ -286,9 +326,7 @@ export function TabList<T extends string>({
             aria-selected={selected}
             onClick={() => onChange(tab.id)}
             className={`rounded-lg px-3 py-1.5 text-sm font-medium transition ${
-              selected
-                ? 'bg-primary text-white'
-                : 'hover:bg-black/5 dark:hover:bg-white/5 muted'
+              selected ? 'bg-primary text-white' : 'hover:bg-black/5 dark:hover:bg-white/5 muted'
             }`}
           >
             {tab.label}
@@ -303,7 +341,13 @@ export function TabList<T extends string>({
 /* Empty state                                                         */
 /* ------------------------------------------------------------------ */
 
-export function EmptyState({ title, children }: { title: string; children?: React.ReactNode }) {
+export function EmptyState({
+  title,
+  children,
+}: {
+  title: React.ReactNode;
+  children?: React.ReactNode;
+}) {
   return (
     <div className="hairline rounded-xl border border-dashed p-8 text-center">
       <p className="font-medium">{title}</p>

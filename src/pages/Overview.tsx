@@ -1,18 +1,5 @@
+import { useMemo } from 'react';
 import { Link } from 'react-router-dom';
-import { CANDIDATES_2026, REALIGNED_2026 } from '@/data/candidates';
-import { ELECTION_DAY_2026, ELECTIONS, LATEST_ELECTION } from '@/data/elections';
-import { COALITIONS } from '@/data/parties';
-import { LATEST_POLL, TIMELINE } from '@/data/polls';
-import { REGISTERED_VOTERS_2021 } from '@/data/regions';
-import { useScenario } from '@/hooks/useScenario';
-import { runForecast } from '@/lib/forecast';
-import {
-  daysUntil,
-  formatDate,
-  formatNumber,
-  formatPercent,
-  formatProbability,
-} from '@/lib/format';
 import {
   Card,
   Citations,
@@ -22,9 +9,29 @@ import {
   ShareBar,
   Stat,
 } from '@/components/ui';
-import { useMemo } from 'react';
+import { CANDIDATES_2026, REALIGNED_2026 } from '@/data/candidates';
+import { ELECTION_DAY_2026, ELECTIONS, LATEST_ELECTION } from '@/data/elections';
+import { COALITIONS } from '@/data/parties';
+import { LATEST_POLL, TIMELINE } from '@/data/polls';
+import { REGISTERED_VOTERS_2021 } from '@/data/regions';
+import { useScenario } from '@/hooks/useScenario';
+import { T, useT } from '@/i18n';
+import { runForecast } from '@/lib/forecast';
+import {
+  daysUntil,
+  formatDate,
+  formatNumber,
+  formatPercent,
+  formatProbability,
+} from '@/lib/format';
+
+/** Surnames are what the tiles have room for. */
+function surname(name: string): string {
+  return name.split(' ').slice(-1)[0] ?? name;
+}
 
 export default function Overview() {
+  const t = useT();
   const { params, seed } = useScenario();
   // A light run on the landing page: enough for a headline, fast to render.
   const forecast = useMemo(() => runForecast(params, { iterations: 2_000, seed }), [params, seed]);
@@ -37,41 +44,39 @@ export default function Overview() {
   return (
     <div className="space-y-8">
       <PageHeader
-        eyebrow="Presidential election · 5 December 2026"
-        title="The Gambia goes to the polls"
-        lede={
-          <>
-            An independent, open-source platform for understanding the 2026 presidential election:
-            the verified record since 1996, the four blocs now contesting, and a transparent
-            forecasting model you can interrogate assumption by assumption. Nothing here is a
-            result, and nothing here comes from the IEC.
-          </>
-        }
+        eyebrow={t('overview.eyebrow')}
+        title={t('overview.title')}
+        lede={t('overview.lede')}
       />
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <Stat
-          label={days >= 0 ? 'Days to polling day' : 'Polling day'}
+          label={t(days >= 0 ? 'overview.stat.daysToPolling' : 'overview.stat.pollingDay')}
           value={days >= 0 ? days : formatDate(ELECTION_DAY_2026)}
-          sub={days >= 0 ? formatDate(ELECTION_DAY_2026) : 'Single round, first past the post'}
+          sub={days >= 0 ? formatDate(ELECTION_DAY_2026) : t('overview.stat.singleRound')}
           provenance="reported"
         />
         <Stat
-          label="Blocs contesting"
+          label={t('overview.stat.blocs')}
           value={COALITIONS.length}
-          sub="One incumbent alliance, three separate opposition platforms"
+          sub={t('overview.stat.blocsSub')}
           provenance="reported"
         />
         <Stat
-          label="2021 register"
+          label={t('overview.stat.register2021')}
           value={formatNumber(REGISTERED_VOTERS_2021)}
-          sub={`Turnout ${formatPercent(LATEST_ELECTION.turnout ?? 0, 1)} in 2021`}
+          sub={t('overview.stat.turnout2021Sub', {
+            turnout: formatPercent(LATEST_ELECTION.turnout ?? 0, 1),
+          })}
           provenance="reported"
         />
         <Stat
-          label="Model leader"
-          value={leader.name.split(' ').slice(-1)[0]}
-          sub={`${formatPercent(leader.mean)} central, ${formatProbability(leader.winProbability)} of simulations`}
+          label={t('overview.stat.modelLeader')}
+          value={surname(leader.name)}
+          sub={t('overview.stat.modelLeaderSub', {
+            share: formatPercent(leader.mean),
+            probability: formatProbability(leader.winProbability),
+          })}
           provenance="modelled"
           accent={leader.color}
         />
@@ -82,40 +87,46 @@ export default function Overview() {
       {/* ------------------------------------------------------------ */}
       <Card>
         <SectionHeading
-          title="The structural story of this election"
-          subtitle="Why the 2016 and 2021 arithmetic matters more than any single poll"
+          title={t('overview.structural.title')}
+          subtitle={t('overview.structural.subtitle')}
         />
         <div className="prose-sm max-w-none space-y-3 text-sm leading-relaxed sm:text-base">
           <p>
-            In 2016, seven opposition parties agreed a single flagbearer and ended twenty-two years
-            of APRC rule by <strong>3.65 points</strong>. In 2021, with that coalition dissolved,
-            the opposition ran five separate candidates and the incumbent won by{' '}
-            <strong>25.51 points</strong> on almost identical turnout. The same electorate produced
-            both outcomes. Coalition structure, not public opinion, moved most of that distance.
+            <T
+              k="overview.structural.p1"
+              vars={{
+                margin2016: <strong>3.65 points</strong>,
+                margin2021: <strong>25.51 points</strong>,
+              }}
+            />
           </p>
           <p>
-            2026 inverts 2016. The incumbent has consolidated: Mama Kandeh&rsquo;s GDC joined the
-            NPP-led alliance in July 2026, and Essa Faal&rsquo;s APP-Sobeyaa followed in September.
-            On 2021 numbers those three blocs together polled{' '}
-            <strong>
-              {formatPercent(
-                (CANDIDATES_2026.find((c) => c.id === 'barrow')?.share2021 ?? 0) +
-                  REALIGNED_2026.reduce((sum, r) => sum + r.share2021, 0),
-              )}
-            </strong>
-            . Meanwhile the all-party opposition talks collapsed and produced{' '}
-            <strong>three</strong> rival platforms instead of one.
+            <T
+              k="overview.structural.p2"
+              vars={{
+                combined: (
+                  <strong>
+                    {formatPercent(
+                      (CANDIDATES_2026.find((c) => c.id === 'barrow')?.share2021 ?? 0) +
+                        REALIGNED_2026.reduce((sum, r) => sum + r.share2021, 0),
+                    )}
+                  </strong>
+                ),
+                three: <strong>{t('overview.structural.p2Three')}</strong>,
+              }}
+            />
           </p>
           <p>
-            That is the whole question of this election, and it is a question about vote transfer,
-            not popularity. An alliance is not a merger: whether a GDC voter in Central River
-            actually turns out for the NPP flagbearer is an empirical matter with no precedent to
-            settle it. The{' '}
-            <Link to="/forecast" className="font-semibold underline underline-offset-2">
-              forecast model
-            </Link>{' '}
-            therefore puts transfer efficiency and opposition consolidation on the front panel as
-            levers, rather than burying them in a single number.
+            <T
+              k="overview.structural.p3"
+              vars={{
+                forecastLink: (
+                  <Link to="/forecast" className="font-semibold underline underline-offset-2">
+                    {t('overview.structural.forecastLink')}
+                  </Link>
+                ),
+              }}
+            />
           </p>
         </div>
         <Citations
@@ -128,12 +139,15 @@ export default function Overview() {
       <div className="grid gap-6 lg:grid-cols-5">
         <Card className="lg:col-span-3">
           <SectionHeading
-            title="Current model projection"
-            subtitle={`${formatNumber(forecast.iterations)} simulations, seed ${forecast.seed}. Bars show the central estimate; the 80 per cent interval is below each bar.`}
+            title={t('overview.projection.title')}
+            subtitle={t('overview.projection.subtitle', {
+              iterations: formatNumber(forecast.iterations),
+              seed: forecast.seed,
+            })}
             provenance="modelled"
             action={
               <Link to="/forecast" className="btn-primary">
-                Open the model
+                {t('overview.projection.open')}
               </Link>
             }
           />
@@ -149,25 +163,34 @@ export default function Overview() {
                 share={bloc.mean}
                 color={bloc.color}
                 interval={[bloc.p10, bloc.p90]}
-                secondary={`80% interval ${formatPercent(bloc.p10)} to ${formatPercent(bloc.p90)} · leads in ${formatProbability(bloc.winProbability)} of simulations`}
+                secondary={t('overview.projection.blocSecondary', {
+                  low: formatPercent(bloc.p10),
+                  high: formatPercent(bloc.p90),
+                  probability: formatProbability(bloc.winProbability),
+                })}
               />
             ))}
           </div>
           <p className="muted mt-4 text-xs leading-relaxed">
-            Projected lead of {formatPercent(forecast.expectedMargin)} between{' '}
-            {leader.name.split(' ').slice(-1)[0]} and {runnerUp.name.split(' ').slice(-1)[0]}.{' '}
-            {formatProbability(forecast.tooCloseToCall)} of simulations produce a gap under two
-            points. These are model outputs under the assumptions currently set, not predictions of
-            the certified result.
+            {t('overview.projection.note', {
+              margin: formatPercent(forecast.expectedMargin),
+              leader: surname(leader.name),
+              runnerUp: surname(runnerUp.name),
+              tooClose: formatProbability(forecast.tooCloseToCall),
+            })}
           </p>
         </Card>
 
         <div className="space-y-6 lg:col-span-2">
           <Card>
             <SectionHeading
-              title="Latest published poll"
+              title={t('overview.poll.title')}
               provenance="poll"
-              subtitle={`${LATEST_POLL.pollster}, fieldwork to ${formatDate(LATEST_POLL.fieldworkEnd)}, n=${formatNumber(LATEST_POLL.sampleSize)}`}
+              subtitle={t('overview.poll.subtitle', {
+                pollster: LATEST_POLL.pollster,
+                date: formatDate(LATEST_POLL.fieldworkEnd),
+                sample: formatNumber(LATEST_POLL.sampleSize),
+              })}
             />
             <div className="space-y-3">
               {Object.entries(LATEST_POLL.shares)
@@ -177,7 +200,7 @@ export default function Overview() {
                   return (
                     <ShareBar
                       key={id}
-                      label={candidate?.name ?? 'Other candidates'}
+                      label={candidate?.name ?? t('common.otherCandidates')}
                       share={share}
                       color={candidate?.color ?? '#B0BEC5'}
                       max={40}
@@ -185,20 +208,22 @@ export default function Overview() {
                   );
                 })}
               <ShareBar
-                label="Undecided"
+                label={t('common.undecided')}
                 share={LATEST_POLL.undecided}
                 color="#90A4AE"
                 max={40}
-                secondary="Large enough to change the order of finish on its own"
+                secondary={t('overview.poll.undecidedNote')}
               />
             </div>
-            {LATEST_POLL.note && <p className="muted mt-3 text-xs leading-relaxed">{LATEST_POLL.note}</p>}
+            {LATEST_POLL.note && (
+              <p className="muted mt-3 text-xs leading-relaxed">{LATEST_POLL.note}</p>
+            )}
             <Citations className="mt-3" ids={LATEST_POLL.sources} />
           </Card>
 
           {nextEvent && (
             <Card>
-              <SectionHeading title="Next on the calendar" provenance="reported" />
+              <SectionHeading title={t('overview.next.title')} provenance="reported" />
               <p className="text-sm font-semibold">{nextEvent.title}</p>
               <p className="muted mt-0.5 text-xs">
                 {nextEvent.endDate
@@ -210,7 +235,7 @@ export default function Overview() {
                 to="/race"
                 className="mt-3 inline-block text-sm font-semibold text-primary underline underline-offset-2 dark:text-accent"
               >
-                Full election calendar
+                {t('overview.next.calendarLink')}
               </Link>
             </Card>
           )}
@@ -220,12 +245,12 @@ export default function Overview() {
       {/* ------------------------------------------------------------ */}
       <Card>
         <SectionHeading
-          title="Six elections, two systems"
-          subtitle="Winning share and turnout, 1996 to 2021"
+          title={t('overview.history.title')}
+          subtitle={t('overview.history.subtitle')}
           provenance="reported"
           action={
             <Link to="/history" className="btn-ghost">
-              Full history
+              {t('overview.history.full')}
             </Link>
           }
         />
@@ -233,12 +258,24 @@ export default function Overview() {
           <table className="w-full min-w-[40rem] text-sm">
             <thead>
               <tr className="hairline border-b text-left">
-                <th scope="col" className="py-2 pr-3 font-semibold">Year</th>
-                <th scope="col" className="py-2 pr-3 font-semibold">Winner</th>
-                <th scope="col" className="py-2 pr-3 text-right font-semibold">Share</th>
-                <th scope="col" className="py-2 pr-3 text-right font-semibold">Margin</th>
-                <th scope="col" className="py-2 pr-3 text-right font-semibold">Turnout</th>
-                <th scope="col" className="py-2 font-semibold">Candidates</th>
+                <th scope="col" className="py-2 pr-3 font-semibold">
+                  {t('overview.history.year')}
+                </th>
+                <th scope="col" className="py-2 pr-3 font-semibold">
+                  {t('overview.history.winner')}
+                </th>
+                <th scope="col" className="py-2 pr-3 text-right font-semibold">
+                  {t('overview.history.share')}
+                </th>
+                <th scope="col" className="py-2 pr-3 text-right font-semibold">
+                  {t('overview.history.margin')}
+                </th>
+                <th scope="col" className="py-2 pr-3 text-right font-semibold">
+                  {t('overview.history.turnout')}
+                </th>
+                <th scope="col" className="py-2 font-semibold">
+                  {t('overview.history.candidates')}
+                </th>
               </tr>
             </thead>
             <tbody>
@@ -253,7 +290,7 @@ export default function Overview() {
                   </td>
                   <td className="tabular py-2 pr-3 text-right">{formatPercent(election.margin)}</td>
                   <td className="tabular py-2 pr-3 text-right">
-                    {election.turnout === null ? '—' : formatPercent(election.turnout)}
+                    {election.turnout === null ? 'n/a' : formatPercent(election.turnout)}
                   </td>
                   <td className="tabular py-2">{election.national.length}</td>
                 </tr>

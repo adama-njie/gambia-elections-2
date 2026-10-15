@@ -21,7 +21,7 @@ import { gaussianFactory, mean, mulberry32, percentileSorted } from './rng';
  * reachable from the UI.
  *
  * Structure:
- *   1. Build two independent priors for the four blocs' vote shares —
+ *   1. Build two independent priors for the four blocs' vote shares:
  *      a structural prior from the 2021 result plus coalition arithmetic,
  *      and a polling prior from the most recent published survey.
  *   2. Blend them by `pollWeight`.
@@ -40,7 +40,7 @@ const OTHER = 'other';
 const SERIES = [...CANDIDATE_IDS, OTHER];
 
 /* ------------------------------------------------------------------ */
-/* Model constants — every one of these is an assumption               */
+/* Model constants: every one of these is an assumption               */
 /* ------------------------------------------------------------------ */
 
 export const MODEL_CONSTANTS = {

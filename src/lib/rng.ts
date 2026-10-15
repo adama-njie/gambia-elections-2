@@ -6,7 +6,7 @@
  * figure can be audited. That rules out Math.random.
  */
 
-/** mulberry32 — small, fast, good enough for Monte Carlo over a few hundred thousand draws. */
+/** mulberry32: small, fast, good enough for Monte Carlo over a few hundred thousand draws. */
 export function mulberry32(seed: number): () => number {
   let a = seed >>> 0;
   return function next(): number {

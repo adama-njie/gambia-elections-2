@@ -21,7 +21,7 @@ export const SOURCES: Source[] = [
   },
   {
     id: 'eu-eom-2021',
-    title: 'European Union Election Observation Mission, The Gambia 2021 — Final Report',
+    title: 'European Union Election Observation Mission, The Gambia 2021: Final Report',
     publisher: 'European Union',
     url: 'https://www.eeas.europa.eu/eom-gambia-2021_en',
     date: '2022-02',
@@ -133,7 +133,7 @@ export const SOURCES: Source[] = [
   },
   {
     id: 'gbos',
-    title: 'Gambia Bureau of Statistics — population and housing census',
+    title: 'Gambia Bureau of Statistics: population and housing census',
     publisher: 'GBoS',
     url: 'https://www.gbosdata.org/',
     date: '2024',

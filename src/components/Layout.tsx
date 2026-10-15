@@ -50,11 +50,17 @@ function Logo() {
   return (
     <Link to="/" className="flex items-center gap-2.5" aria-label={t('brand.homeAria')}>
       <svg viewBox="0 0 24 24" className="h-8 w-8 shrink-0" aria-hidden="true">
-        <rect width="24" height="24" rx="6" fill="#1F6F8B" />
-        {/* The flag's bands, abstracted. */}
-        <rect x="4" y="6" width="16" height="3.2" rx="1" fill="#CE1126" />
-        <rect x="4" y="10.4" width="16" height="3.2" rx="1" fill="#F5F5F5" opacity=".9" />
-        <rect x="4" y="14.8" width="16" height="3.2" rx="1" fill="#3A7728" />
+        <rect width="24" height="24" rx="6" fill="#0D2B36" />
+        {/*
+          The national flag of The Gambia: red, blue and green bands
+          separated by two white fimbriations, in the official 6:1:4:1:6
+          ratio. The white base rectangle shows through between the
+          coloured bands to form the fimbriations.
+        */}
+        <rect x="3" y="4.5" width="18" height="15" fill="#FFFFFF" />
+        <rect x="3" y="4.5" width="18" height="5" fill="#CE1126" />
+        <rect x="3" y="10.333" width="18" height="3.334" fill="#0C1C8C" />
+        <rect x="3" y="14.5" width="18" height="5" fill="#3A7728" />
       </svg>
       <span className="leading-tight">
         <span className="block text-sm font-bold tracking-tight sm:text-base">

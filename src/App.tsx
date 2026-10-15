@@ -66,7 +66,7 @@ function NotFound() {
  *
  * This fallback is deliberately English-only and context-free. It is the
  * last thing standing after something has already broken, so it must not
- * depend on the i18n provider, the router, or any hook — all of which sit
+ * depend on the i18n provider, the router, or any hook, all of which sit
  * inside it and any of which may be the thing that failed.
  */
 class ErrorBoundary extends React.Component<

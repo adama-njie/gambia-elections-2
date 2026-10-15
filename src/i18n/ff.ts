@@ -1,7 +1,7 @@
 import type { PartialDictionary } from './en';
 
 /**
- * Pulaar / Fula — UNREVIEWED DRAFT, and thin.
+ * Pulaar / Fula, UNREVIEWED DRAFT, and thin.
  *
  * Provenance, stated plainly: drafted by a machine, not by a Pulaar speaker,
  * and reviewed by nobody. Coverage is deliberately narrow. Keys that could
@@ -12,7 +12,7 @@ import type { PartialDictionary } from './en';
  * Orthography note for reviewers: this file uses the standard Pulaar
  * characters ɓ, ɗ, ƴ and ŋ. If the review settles on a different
  * orthography for The Gambia specifically, change it here and the whole
- * interface follows — nothing outside this file encodes Pulaar spelling.
+ * interface follows, nothing outside this file encodes Pulaar spelling.
  *
  * The statistical and legal disclaimers are not here and cannot be put here:
  * see ./authoritative.ts.
@@ -27,7 +27,7 @@ export const ff: PartialDictionary = {
   'nav.regions': 'Diiwanuuji',
   'nav.history': 'Taariika',
   'nav.data': 'Kabaruuji',
-  /* nav.overview, nav.forecast, nav.methodology: no confident rendering —
+  /* nav.overview, nav.forecast, nav.methodology: no confident rendering,
      falls back to English and is counted as untranslated. */
 
   /* Page titles */

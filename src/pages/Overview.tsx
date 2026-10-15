@@ -290,7 +290,7 @@ export default function Overview() {
                   </td>
                   <td className="tabular py-2 pr-3 text-right">{formatPercent(election.margin)}</td>
                   <td className="tabular py-2 pr-3 text-right">
-                    {election.turnout === null ? '—' : formatPercent(election.turnout)}
+                    {election.turnout === null ? 'n/a' : formatPercent(election.turnout)}
                   </td>
                   <td className="tabular py-2">{election.national.length}</td>
                 </tr>

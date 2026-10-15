@@ -1,5 +1,5 @@
 /**
- * English — the complete dictionary and the single source of truth.
+ * English: the complete dictionary and the single source of truth.
  *
  * Rules for this file:
  *
@@ -12,8 +12,8 @@
  *    fragments a translator cannot reorder.
  * 3. Sentences that embed a link or bold run also use `{name}`; the `<T>`
  *    component substitutes React nodes for them.
- * 4. Nothing in `src/data` is translated here. That is the dataset — party
- *    names, candidate names, source titles, election context — and it is
+ * 4. Nothing in `src/data` is translated here. That is the dataset (party
+ *    names, candidate names, source titles, election context) and it is
  *    cited material, not interface copy.
  * 5. CSV and JSON exports stay in English regardless of the active locale.
  *    They are data artefacts that get republished and cited, and a column
@@ -81,7 +81,7 @@ export const en = {
   'common.reload': 'Reload',
 
   /* ---------------------------------------------------------------- */
-  /* Provenance — the core vocabulary of the whole platform           */
+  /* Provenance: the core vocabulary of the whole platform           */
   /* ---------------------------------------------------------------- */
   'prov.official.label': 'Official',
   'prov.official.help': 'Published by the IEC or another primary official record.',
@@ -110,8 +110,8 @@ export const en = {
 
   /**
    * The short plain-language gloss. This one IS translated, because the
-   * single most important sentence on the platform — "this is not a result"
-   * — has to reach a reader who does not read English. It is deliberately
+   * single most important sentence on the platform, "this is not a result",
+   * has to reach a reader who does not read English. It is deliberately
    * written in short, concrete sentences with no statistical or legal terms,
    * it is still labelled a draft, and it is always rendered directly above
    * the authoritative English wording rather than in place of it.
@@ -303,7 +303,7 @@ export const en = {
     'How far the three opposition blocs stand down behind their strongest challenger. 0 keeps three tickets; 100 is a single flagbearer, as in 2016.',
   'lever.undecidedToChallengers.label': 'Undecided break to challengers',
   'lever.undecidedToChallengers.help':
-    'The August 2026 poll left 17 per cent undecided — enough to change the order of finish on its own.',
+    'The August 2026 poll left 17 per cent undecided, enough to change the order of finish on its own.',
   'lever.pollWeight.label': 'Weight on published polls',
   'lever.pollWeight.help':
     '0 uses only the 2021 result plus coalition arithmetic. 100 uses only the latest poll. Two published surveys is thin evidence either way.',
@@ -391,7 +391,7 @@ export const en = {
   'regions.eyebrow': 'Seven administrative areas',
   'regions.title': 'The electoral map',
   'regions.lede':
-    'The Gambia tabulates results across seven administrative areas, which are also the IEC’s reporting units. This page shows how the vote is distributed across them — and is explicit that the distribution itself is modelled, not published.',
+    'The Gambia tabulates results across seven administrative areas, which are also the IEC’s reporting units. This page shows how the vote is distributed across them, and is explicit that the distribution itself is modelled, not published.',
 
   'regions.notice.title': 'These area figures are modelled, not official',
   'regions.notice.body':
@@ -425,7 +425,7 @@ export const en = {
   'regions.areas.colConstituencies': 'Constituencies',
   'regions.areas.colUrban': 'Urban',
   'regions.areas.note':
-    'West Coast and Kanifing together hold roughly half the national register, which is why urban swing dominates any national projection. Central and Upper River are disproportionately weighty relative to their population — a long-standing feature of the register that shapes every campaign’s ground strategy.',
+    'West Coast and Kanifing together hold roughly half the national register, which is why urban swing dominates any national projection. Central and Upper River are disproportionately weighty relative to their population, a long-standing feature of the register that shapes every campaign’s ground strategy.',
 
   /* ---------------------------------------------------------------- */
   /* History                                                          */
@@ -471,7 +471,7 @@ export const en = {
   'history.competition.colCandidates': 'Candidates',
   'history.competition.colUnited': 'United ticket outpolls winner',
   'history.competition.note':
-    'This is an arithmetic exercise, not a counterfactual. Votes are not transferable property: in a consolidated race some supporters stay home and some switch sides, which is exactly what the transfer and consolidation levers in the forecast model represent. 2021 is the striking row — the combined opposition took 46.77 per cent against the winner’s 53.23, so even perfect unity would have fallen short, while in 2016 unity was decisive at a margin of 3.65 points.',
+    'This is an arithmetic exercise, not a counterfactual. Votes are not transferable property: in a consolidated race some supporters stay home and some switch sides, which is exactly what the transfer and consolidation levers in the forecast model represent. 2021 is the striking row, the combined opposition took 46.77 per cent against the winner’s 53.23, so even perfect unity would have fallen short, while in 2016 unity was decisive at a margin of 3.65 points.',
 
   'history.parties.title': 'Parties in the record',
   'history.parties.inactive': '(inactive)',
@@ -511,14 +511,14 @@ export const en = {
   'meth.s2.title': '2. Data rules',
   'meth.s2.intro': 'Four provenance levels, shown as a badge on every figure in the interface:',
   'meth.s2.official':
-    '{term} — published by the IEC or another primary official record. {emphasis} That is not an oversight: the EU Election Observation Mission’s 2021 final report records that the IEC published no results on its website, and recommends publication disaggregated by polling station. Until that exists, claiming official provenance would be false.',
+    '{term}: published by the IEC or another primary official record. {emphasis} That is not an oversight: the EU Election Observation Mission’s 2021 final report records that the IEC published no results on its website, and recommends publication disaggregated by polling station. Until that exists, claiming official provenance would be false.',
   'meth.s2.officialEmphasis': 'Nothing in the current dataset carries this label.',
   'meth.s2.reported':
-    '{term} — figures the IEC announced, recorded consistently by observer missions and standard secondary tables. This covers all national results 1996–2021.',
+    '{term}: figures the IEC announced, recorded consistently by observer missions and standard secondary tables. This covers all national results 1996–2021.',
   'meth.s2.modelled':
-    '{term} — produced by this platform. All area-level breakdowns and all forecasts.',
+    '{term}: produced by this platform. All area-level breakdowns and all forecasts.',
   'meth.s2.survey':
-    '{term} — polling from a named pollster, with its sample size and margin of error attached.',
+    '{term}: polling from a named pollster, with its sample size and margin of error attached.',
   'meth.s2.enforced':
     'These rules are enforced by tests, not by convention. The suite fails if any election claims official provenance, if any area breakdown is labelled anything but modelled, if a citation does not resolve to a registered source, if vote counts contradict reported shares, or if a candidate is marked nominated before the IEC window closes.',
 
@@ -542,7 +542,7 @@ export const en = {
 
   'meth.s4.title': '4. Every coefficient',
   'meth.s4.subtitle':
-    'These are reasoned priors, not fitted parameters. Argue with them — that is the point of listing them.',
+    'These are reasoned priors, not fitted parameters. Argue with them: that is the point of listing them.',
   'meth.coef.approval.name': 'Incumbent approval',
   'meth.coef.approval.body': 'Points of incumbent vote share per point of approval above 50.',
   'meth.coef.inflation.name': 'Inflation',
@@ -679,7 +679,7 @@ export const en = {
 
   'data.independence.title': 'Independence',
   'data.independence.body':
-    'This platform is not affiliated with, funded by, or endorsed by the Independent Electoral Commission, any political party, any coalition, or any candidate. It takes no position on who should win. Where sources conflict, the conflict is shown rather than resolved silently. Where the evidence is thin — which, for the 2026 race, is often — the interface says so.',
+    'This platform is not affiliated with, funded by, or endorsed by the Independent Electoral Commission, any political party, any coalition, or any candidate. It takes no position on who should win. Where sources conflict, the conflict is shown rather than resolved silently. Where the evidence is thin, which, for the 2026 race, is often, the interface says so.',
 
   /* ---------------------------------------------------------------- */
   /* Region map                                                       */

@@ -1,7 +1,7 @@
 import type { PartialDictionary } from './en';
 
 /**
- * Wolof — UNREVIEWED DRAFT.
+ * Wolof, UNREVIEWED DRAFT.
  *
  * Provenance of this file, stated plainly because it matters: these strings
  * were drafted by a machine, not by a Wolof speaker. Nobody has reviewed
@@ -12,7 +12,7 @@ import type { PartialDictionary } from './en';
  * What is covered: navigation, provenance labels, the scenario levers, the
  * common controls, and the short plain-language "this is not a result"
  * gloss. Longer analytical prose is deliberately absent and falls back to
- * English — see `resolve()` in ./core.ts, which reports that fallback rather
+ * English, see `resolve()` in ./core.ts, which reports that fallback rather
  * than hiding it, and the banner in Layout.tsx, which counts it.
  *
  * What is deliberately NOT here: the statistical and legal disclaimers. They
@@ -20,7 +20,7 @@ import type { PartialDictionary } from './en';
  * them to this file has no effect; the resolver will not use them.
  *
  * For reviewers: every entry below should be read as a question, not an
- * assertion. Civic and statistical vocabulary is the hardest part — where a
+ * assertion. Civic and statistical vocabulary is the hardest part, where a
  * borrowing from English or French is what Wolof speakers actually use for a
  * technical term, prefer the borrowing over a coined native term.
  */
@@ -48,7 +48,7 @@ export const wo: PartialDictionary = {
   'meth.title': 'Anam wi',
   'data.title': 'Dàtta ak fi mu jóge',
 
-  /* Provenance labels — the core vocabulary of the platform */
+  /* Provenance labels, the core vocabulary of the platform */
   'prov.official.label': 'Ofisiel',
   'prov.reported.label': 'Yégle',
   'prov.modelled.label': 'Xayma',

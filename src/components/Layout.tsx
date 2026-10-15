@@ -54,13 +54,13 @@ function Logo() {
         {/*
           The national flag of The Gambia: red, blue and green bands
           separated by two white fimbriations, in the official 6:1:4:1:6
-          ratio. The white base rectangle shows through between the
+          ratio and the official 2:3 proportion. The white base shows through
           coloured bands to form the fimbriations.
         */}
-        <rect x="3" y="4.5" width="18" height="15" fill="#FFFFFF" />
-        <rect x="3" y="4.5" width="18" height="5" fill="#CE1126" />
-        <rect x="3" y="10.333" width="18" height="3.334" fill="#0C1C8C" />
-        <rect x="3" y="14.5" width="18" height="5" fill="#3A7728" />
+        <rect x="3" y="6" width="18" height="12" fill="#FFFFFF" />
+        <rect x="3" y="6" width="18" height="4" fill="#CE1126" />
+        <rect x="3" y="10.667" width="18" height="2.666" fill="#0C1C8C" />
+        <rect x="3" y="14" width="18" height="4" fill="#3A7728" />
       </svg>
       <span className="leading-tight">
         <span className="block text-sm font-bold tracking-tight sm:text-base">

@@ -128,7 +128,7 @@ export default function History() {
             />
             <Stat
               label={t('history.stat.turnout')}
-              value={election.turnout === null ? '—' : formatPercent(election.turnout)}
+              value={election.turnout === null ? 'n/a' : formatPercent(election.turnout)}
               sub={
                 election.registeredVoters
                   ? t('history.stat.registeredSub', {
@@ -140,7 +140,7 @@ export default function History() {
             />
             <Stat
               label={t('history.stat.validVotes')}
-              value={election.validVotes ? formatNumber(election.validVotes) : '—'}
+              value={election.validVotes ? formatNumber(election.validVotes) : 'n/a'}
               sub={t('history.stat.candidatesSub', { count: election.national.length })}
               provenance={election.provenance}
             />

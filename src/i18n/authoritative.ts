@@ -6,8 +6,8 @@ import type { TranslationKey } from './en';
  * These are the statistical and legal disclaimers: the sentences that tell a
  * reader what this platform is not, what it may not be cited as, and who
  * alone can declare a result. Showing an unreviewed draft translation of one
- * of them, in the platform's own voice, would be worse than showing nothing
- * — a reader in Wolof would receive a weakened or mangled version of exactly
+ * of them, in the platform's own voice, would be worse than showing nothing:
+ * a reader in Wolof would receive a weakened or mangled version of exactly
  * the warning they most need, with no way to tell.
  *
  * So the resolver refuses to translate them. It returns the English wording
@@ -16,7 +16,7 @@ import type { TranslationKey } from './en';
  * this one block is not in the reader's language.
  *
  * A key leaves this list when a named native speaker has reviewed and signed
- * off the translated wording for every shipped locale — not before, and not
+ * off the translated wording for every shipped locale, not before, and not
  * because the draft "reads fine".
  */
 export const AUTHORITATIVE_EN_ONLY: readonly TranslationKey[] = [

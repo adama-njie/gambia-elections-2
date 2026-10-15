@@ -73,7 +73,7 @@ export function isLocale(value: unknown): value is Locale {
 }
 
 /* ------------------------------------------------------------------ */
-/* Resolution — the explicit-fallback contract                         */
+/* Resolution: the explicit-fallback contract                         */
 /* ------------------------------------------------------------------ */
 
 /**

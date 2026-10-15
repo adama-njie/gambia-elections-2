@@ -6,7 +6,7 @@
  * (build version, base path, precache manifest) with real values, and
  * writes the result to dist/sw.js. Those placeholders are deliberately not
  * named anywhere else in this file, including in comments, so that a
- * substitution can only ever hit the statement it is meant for — and the
+ * substitution can only ever hit the statement it is meant for, and the
  * plugin fails the build if any placeholder survives.
  *
  * The substitution is the whole reason this is hand-rolled

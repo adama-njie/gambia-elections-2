@@ -90,7 +90,7 @@ Linear interpolation by `pollWeight`. At 0 you see the pure 2021 arithmetic; at 
 ### 3.4 Fundamentals
 
 Applied as a signed swing on the incumbent, measured against reference conditions, then mirrored
-onto challengers in proportion to their size — except the youth-mobilisation component, 60 per cent
+onto challengers in proportion to their size, except the youth-mobilisation component, 60 per cent
 of which accrues specifically to UNITE.
 
 | Driver | Coefficient | Reference |
@@ -134,7 +134,7 @@ Report means, medians, 80 and 95 per cent credible intervals, and the share of i
 leads. Randomness comes from a seeded mulberry32 generator with Box-Muller normals, so a given seed
 always reproduces the same figures.
 
-Win probabilities are never displayed as a flat 0 or 100 — a bloc leading every simulation is
+Win probabilities are never displayed as a flat 0 or 100: a bloc leading every simulation is
 reported as ">99%". The model is not validated well enough to claim certainty.
 
 ### 3.7 Regional projection
@@ -159,7 +159,7 @@ silently, this project:
 - fails the test suite if any row is labelled anything else,
 - and says so in the interface wherever area data is shown.
 
-The estimates reflect well-documented regional patterns — urban Kanifing least favourable to the
+The estimates reflect well-documented regional patterns: urban Kanifing least favourable to the
 incumbent, Central and Upper River most favourable, the GDC vote concentrated in Central and Upper
 River. They are useful for seeing shape and pattern. **They are not evidence about any particular
 area.**
@@ -184,4 +184,4 @@ area.**
 
 If you change a coefficient, change it here and in `MODEL_CONSTANTS` together, and say why. The
 Methodology page reads its numbers directly from `MODEL_CONSTANTS`, so the app cannot drift out of
-sync with the code — but this document can, so keep it current.
+sync with the code, but this document can, so keep it current.

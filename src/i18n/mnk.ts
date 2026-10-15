@@ -1,7 +1,7 @@
 import type { PartialDictionary } from './en';
 
 /**
- * Mandinka — UNREVIEWED DRAFT, and thinner than the Wolof draft.
+ * Mandinka, UNREVIEWED DRAFT, and thinner than the Wolof draft.
  *
  * Provenance, stated plainly: these strings were drafted by a machine, not
  * by a Mandinka speaker, and nobody has reviewed them. The coverage here is
@@ -10,7 +10,7 @@ import type { PartialDictionary } from './en';
  * than filled with a guess: it then falls back to English, the fallback is
  * reported by `resolve()` in ./core.ts, and the banner in Layout.tsx counts
  * it and tells the reader. A visible gap is reviewable. A confident-sounding
- * wrong translation of "Modelled" on an election figure is not — it is the
+ * wrong translation of "Modelled" on an election figure is not, it is the
  * exact failure mode this platform exists to avoid.
  *
  * Mandinka is the most widely spoken first language in The Gambia, so this
@@ -30,7 +30,7 @@ export const mnk: PartialDictionary = {
   'nav.regions': 'Tundoolu',
   'nav.history': 'Taarikoo',
   'nav.data': 'Kibaaroolu',
-  /* nav.forecast, nav.methodology: no confident rendering — falls back to
+  /* nav.forecast, nav.methodology: no confident rendering, falls back to
      English and is counted as untranslated. */
 
   /* Page titles */

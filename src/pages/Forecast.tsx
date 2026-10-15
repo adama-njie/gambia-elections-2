@@ -117,7 +117,7 @@ export default function Forecast() {
    */
   const exportCsv = () => {
     const rows: (string | number)[][] = [
-      ['Gambia Elections 2026 — model projection (NOT an official result)'],
+      ['Gambia Elections 2026: model projection (NOT an official result)'],
       ['Generated', new Date().toISOString()],
       ['Iterations', forecast.iterations],
       ['Seed', forecast.seed],

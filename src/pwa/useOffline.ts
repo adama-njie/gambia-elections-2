@@ -4,13 +4,13 @@ import { useCallback, useEffect, useState } from 'react';
  * Service worker registration and the honest-offline state.
  *
  * The rule this implements: the app may serve a cached copy, but it may
- * never do so silently. Three facts are surfaced to the interface —
+ * never do so silently. Three facts are surfaced to the interface:
  *
  *   online      whether the device currently has a connection
  *   cachedAt    when the copy on this device was actually saved
  *   updateReady whether a newer copy has already downloaded
  *
- * — and the components in src/components/Offline.tsx turn them into a
+ * and the components in src/components/Offline.tsx turn them into a
  * notice. Without `cachedAt` the offline story would amount to "some of
  * these numbers might be old", which is not something a reader can act on.
  */
@@ -60,7 +60,7 @@ export function registerServiceWorker(onUpdateReady: () => void): void {
           if (!installing) return;
           installing.addEventListener('statechange', () => {
             // `controller` present means this is an update, not a first
-            // install — on a first install there is nothing stale to warn
+            // install: on a first install there is nothing stale to warn
             // about, so prompting for a reload would be noise.
             if (installing.state === 'installed' && navigator.serviceWorker.controller) {
               onUpdateReady();

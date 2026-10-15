@@ -2,12 +2,12 @@
  * Generate the PWA icon set.
  *
  * Run with `npm run icons`. The output is committed, so a normal build and
- * CI never need to run this — it exists so the icons are reproducible from
+ * CI never need to run this, it exists so the icons are reproducible from
  * source rather than being opaque binaries someone drew once.
  *
- * Written against node:zlib only. The icon is the same abstracted flag used
- * in the app's logo (teal field, three bands), which is simple enough to
- * rasterise directly and does not justify pulling in an image library.
+ * Written against node:zlib only. The icon is the national flag of The
+ * Gambia on a dark field, the same mark used in the app's logo. Solid
+ * horizontal bands rasterise directly and do not justify an image library.
  */
 import { deflateSync } from 'node:zlib';
 import { mkdirSync, writeFileSync } from 'node:fs';
@@ -16,9 +16,10 @@ import { fileURLToPath } from 'node:url';
 
 const OUT_DIR = join(dirname(fileURLToPath(import.meta.url)), '..', 'public', 'icons');
 
-const TEAL = [0x1f, 0x6f, 0x8b];
+const FIELD = [0x0d, 0x2b, 0x36];
 const RED = [0xce, 0x11, 0x26];
-const WHITE = [0xf5, 0xf5, 0xf5];
+const WHITE = [0xff, 0xff, 0xff];
+const BLUE = [0x0c, 0x1c, 0x8c];
 const GREEN = [0x3a, 0x77, 0x28];
 
 /* ------------------------------------------------------------------ */
@@ -84,21 +85,32 @@ function draw(size, { radius, inset }) {
   const pad = inset * size;
   const field = size - pad * 2;
 
-  // Three bands, stacked in the middle 60% of the field with gaps.
-  const bandHeight = field * 0.1333;
-  const bandGap = field * 0.0333;
-  const bandsTop = pad + field / 2 - (bandHeight * 3 + bandGap * 2) / 2;
-  const bandLeft = pad + field * 0.1667;
-  const bandWidth = field * 0.6667;
-  const bandRadius = bandHeight * 0.3;
+  // The national flag, in the official 2:3 proportion, with bands in the
+  // 6:1:4:1:6 ratio: red, white, blue, white, green. The two white bands
+  // are the fimbriations separating the three colours.
+  const flagWidth = field * 0.72;
+  const flagHeight = (flagWidth * 2) / 3;
+  const flagLeft = pad + (field - flagWidth) / 2;
+  const flagTop = pad + (field - flagHeight) / 2;
+  const unit = flagHeight / 18;
+  const bands = [
+    [RED, 0, 6],
+    [WHITE, 6, 1],
+    [BLUE, 7, 4],
+    [WHITE, 11, 1],
+    [GREEN, 12, 6],
+  ];
 
   const inRoundedRect = (x, y, left, top, width, height, rad) => {
     if (x < left || y < top || x >= left + width || y >= top + height) return false;
     const dx = Math.min(x - left, left + width - 1 - x);
     const dy = Math.min(y - top, top + height - 1 - y);
     if (dx >= rad || dy >= rad) return true;
-    const cx = dx < rad ? left + rad : left + width - 1 - rad;
-    const cy = dy < rad ? top + rad : top + height - 1 - rad;
+    // Pick the nearest corner's centre. `dx`/`dy` are distances to the
+    // closest edge, so they cannot say which side the pixel is on; compare
+    // against the left/top edge directly instead.
+    const cx = x - left < rad ? left + rad : left + width - 1 - rad;
+    const cy = y - top < rad ? top + rad : top + height - 1 - rad;
     return (x - cx) ** 2 + (y - cy) ** 2 <= rad ** 2;
   };
 
@@ -113,11 +125,11 @@ function draw(size, { radius, inset }) {
   for (let y = 0; y < size; y += 1) {
     for (let x = 0; x < size; x += 1) {
       if (!inRoundedRect(x, y, pad, pad, field, field, r)) continue;
-      set(x, y, TEAL);
-      for (const [index, colour] of [RED, WHITE, GREEN].entries()) {
-        const top = bandsTop + index * (bandHeight + bandGap);
-        if (inRoundedRect(x, y, bandLeft, top, bandWidth, bandHeight, bandRadius)) {
-          set(x, y, colour, colour === WHITE ? 240 : 255);
+      set(x, y, FIELD);
+      for (const [colour, offset, span] of bands) {
+        const top = flagTop + offset * unit;
+        if (inRoundedRect(x, y, flagLeft, top, flagWidth, span * unit, 0)) {
+          set(x, y, colour);
         }
       }
     }

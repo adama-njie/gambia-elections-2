@@ -57,7 +57,7 @@ export const PARTIES: Party[] = [
   },
   {
     id: 'APP',
-    name: 'All People’s Party — Sobeyaa',
+    name: 'All People’s Party (Sobeyaa)',
     founded: 2022,
     leader: 'Essa M. Faal',
     color: '#E57373',
@@ -172,7 +172,7 @@ export const COALITIONS: Coalition[] = [
     color: '#1F6F8B',
     cohesion: 'formal',
     summary:
-      'The incumbent alliance. Mama Kandeh brought the GDC in during July 2026 after the all-party coalition talks collapsed, describing it as an alliance rather than a merger. Essa Faal and APP-Sobeyaa sealed their own agreement with the NPP in September 2026, over objections from part of his camp. On 2021 arithmetic the three blocs together polled roughly 67 per cent, which is the basis for the president’s claim that the race is already settled — a claim that assumes near-perfect vote transfer.',
+      'The incumbent alliance. Mama Kandeh brought the GDC in during July 2026 after the all-party coalition talks collapsed, describing it as an alliance rather than a merger. Essa Faal and APP-Sobeyaa sealed their own agreement with the NPP in September 2026, over objections from part of his camp. On 2021 arithmetic the three blocs together polled roughly 67 per cent, which is the basis for the president’s claim that the race is already settled, a claim that assumes near-perfect vote transfer.',
     sources: ['point-kandeh-npp', 'standard-faal-alliance', 'standard-landscape'],
   },
   {

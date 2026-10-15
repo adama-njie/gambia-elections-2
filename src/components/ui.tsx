@@ -261,7 +261,7 @@ export function Notice({
  * unreviewed draft of "this is not a certified result" is worse than no
  * translation at all. What a non-English reader gets instead is this: the
  * one sentence that matters, in plain language, in their language, directly
- * above the authoritative English wording — plus a note saying why that
+ * above the authoritative English wording, plus a note saying why that
  * wording is in English.
  *
  * Render it inside any `Notice` whose body is an authoritative key.

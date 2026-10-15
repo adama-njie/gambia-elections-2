@@ -15,7 +15,7 @@ transparent forecasting model that runs entirely in the browser.
 A tool for journalists, researchers, civil society and voters who want to understand the 2026
 election rather than be told who will win. Three principles shape it:
 
-1. **Provenance on every figure.** Four trust levels — official, reported, modelled, survey —
+1. **Provenance on every figure.** Four trust levels (official, reported, modelled, survey),
    displayed as a badge wherever a number appears. Nothing currently carries the *official* label,
    because the IEC has not published a machine-readable results archive. Claiming otherwise would be
    false, so the app does not.
@@ -27,13 +27,13 @@ election rather than be told who will win. Three principles shape it:
 
 ## Features
 
-- **Overview** — the structural story of the election, headline projection, latest poll, record since 1996.
-- **The 2026 race** — the four blocs with members, formation dates and flagbearers; what changed since 2021; the IEC calendar; all published polling.
-- **Forecast** — twelve scenario levers, five named presets, Monte Carlo simulation up to 50,000 iterations, driver breakdown, area projection, CSV export, shareable scenario URLs.
-- **Regions** — schematic choropleth of the seven administrative areas with a full accessible data table.
-- **History** — every election 1996–2021, party trend lines, turnout, and a competitiveness analysis of the combined opposition vote.
-- **Methodology** — the complete model specification, every coefficient, and the known limitations.
-- **Data** — provenance rules, CSV and JSON downloads, and all sources.
+- **Overview**, the structural story of the election, headline projection, latest poll, record since 1996.
+- **The 2026 race**, the four blocs with members, formation dates and flagbearers; what changed since 2021; the IEC calendar; all published polling.
+- **Forecast**, twelve scenario levers, five named presets, Monte Carlo simulation up to 50,000 iterations, driver breakdown, area projection, CSV export, shareable scenario URLs.
+- **Regions**, schematic choropleth of the seven administrative areas with a full accessible data table.
+- **History**, every election 1996–2021, party trend lines, turnout, and a competitiveness analysis of the combined opposition vote.
+- **Methodology**, the complete model specification, every coefficient, and the known limitations.
+- **Data**, provenance rules, CSV and JSON downloads, and all sources.
 
 Plus: four interface languages, full offline support, dark mode, keyboard-navigable map, print
 styles, code-split routes, and a 98-test suite that enforces the data contract, the translation
@@ -52,7 +52,7 @@ and three separate opposition platforms:
 | Team Gambia Grand Coalition | PDOIS | not yet confirmed | 12 September 2026 |
 
 The central analytical question is **vote transfer**. Barrow, Kandeh and Faal together polled 67.55
-per cent in 2021, which is the basis for the claim that the election is settled — but an alliance is
+per cent in 2021, which is the basis for the claim that the election is settled, but an alliance is
 not a merger, and no Gambian precedent supports perfect transfer. The model puts transfer efficiency
 and opposition consolidation on the front panel rather than burying them in a single number.
 
@@ -84,7 +84,7 @@ router, so `dist/` deploys unchanged to GitHub Pages, any shared host, or a USB 
 ```
 src/
   data/          Datasets, each row carrying provenance and citations
-    sources.ts     The source registry — every citation resolves here
+    sources.ts     The source registry, every citation resolves here
     elections.ts   National results 1996–2021 + modelled area baselines
     parties.ts     Parties and the four 2026 coalitions
     candidates.ts  The 2026 field
@@ -98,7 +98,7 @@ src/
     rng.ts           Seeded RNG, so results are reproducible
     format.ts        Formatting and provenance labels
   i18n/
-    en.ts          The complete English dictionary — the source of truth
+    en.ts          The complete English dictionary, the source of truth
     mnk.ts         Mandinka draft
     wo.ts          Wolof draft
     ff.ts          Pulaar draft
@@ -129,15 +129,15 @@ from `coverage()`, so it is a fact about the build and it falls as review procee
 
 Three rules govern how the drafts behave, and they are enforced by `src/i18n/i18n.test.ts`:
 
-1. **Fallback is explicit, never silent.** Every lookup returns *why* it returned what it did —
+1. **Fallback is explicit, never silent.** Every lookup returns *why* it returned what it did:
    `translated`, `fallback-en`, `english-authoritative` or `missing`. Longer analytical prose has no
    draft and falls back to English by design; the reader is told, and the count says how often.
 2. **A gap beats a guess.** Where no confident rendering existed, the key is left out rather than
    filled in. Mandinka and Pulaar deliberately do not yet translate *Modelled* or *Survey*: those
    two words are what stop a projection being read as a count, and the English word is safer than a
    wrong one. They are the highest-priority review targets in the repository.
-3. **The disclaimers stay in English.** The statistical and legal notices — "this is a projection,
-   not a prediction", "nothing on this platform is official", the area-data warnings — are listed in
+3. **The disclaimers stay in English.** The statistical and legal notices, "this is a projection,
+   not a prediction", "nothing on this platform is official", the area-data warnings, are listed in
    `src/i18n/authoritative.ts` and are *always* served in English, even if a translation is added.
    A mistranslated disclaimer is worse than an untranslated one. What a non-English reader gets
    instead is a short, plain-language gloss in their own language ("This is not a result. Only the
@@ -159,14 +159,14 @@ orthography.
 
 ## Offline
 
-The app is an installable PWA that works fully offline after one visit — genuinely fully, because
+The app is an installable PWA that works fully offline after one visit, genuinely fully, because
 the forecast model runs on the device and the app makes no API calls at any point.
 
 - `src/pwa/sw-template.js` is the service worker; a ~40-line plugin in `vite.config.ts` bakes the
   real hashed asset manifest into it at build time and writes `dist/sw.js`. Hand-rolled rather than
   `vite-plugin-pwa` because the app is deliberately dependency-light and the only thing a generic
   plugin would add here is that manifest.
-- **Every** build asset is precached, not just the entry chunk — about 830 kB uncompressed, roughly
+- **Every** build asset is precached, not just the entry chunk, about 830 kB uncompressed, roughly
   250 kB over the wire, once. The routes are code-split, so precaching only the entry would leave
   someone who installed from the Overview page without the Forecast page the moment they lost
   signal.
@@ -182,7 +182,7 @@ A cached copy is only useful if the reader knows how old it is. The worker recor
 the copy, and the interface reports it:
 
 - the footer and the Data page always state when the dataset was last updated
-  (`src/data/freshness.ts`, maintained by hand — rebuilding the site does not make the figures
+  (`src/data/freshness.ts`, maintained by hand, rebuilding the site does not make the figures
   newer, so the build timestamp is never presented as a data date);
 - going offline raises a banner naming the date and time this copy was saved on this device;
 - past a week it says how many days ago that was and links to the IEC.
@@ -223,7 +223,7 @@ real data arrives.
 ## Limitations
 
 Read the Methodology page in full before citing anything. In short: the model is **not validated
-against out-of-sample elections** — there are only six on record, two of them meaningfully
+against out-of-sample elections**, there are only six on record, two of them meaningfully
 competitive. Its coefficients are reasoned priors, not fitted parameters. There are two published
 polls, from one organisation, both with large undecided shares. The candidate field is not certified
 until nominations close on 14 November 2026. No area-level results data exists publicly. The model
@@ -233,5 +233,5 @@ not be treated as a translation until native speakers have checked them.
 
 ## Licence
 
-Released for public use. Carry the provenance labels with any figures you republish — a modelled
+Released for public use. Carry the provenance labels with any figures you republish, a modelled
 estimate that loses its label becomes misinformation.

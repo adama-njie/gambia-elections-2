@@ -9,8 +9,8 @@ import { beforeEach, describe, expect, it } from 'vitest';
  * The worker is the whole offline story, and it is the one part of this
  * codebase that cannot be checked by opening the app: it runs in a separate
  * global, it only does anything on install/activate/fetch events, and the
- * failure mode — a reader on a weak connection getting a blank page, or
- * worse, a silently stale one — is invisible until it matters.
+ * failure mode (a reader on a weak connection getting a blank page, or
+ * worse, a silently stale one) is invisible until it matters.
  *
  * So the template is loaded here, the build-time substitution is applied
  * exactly as vite.config.ts applies it, and it is executed against a mock

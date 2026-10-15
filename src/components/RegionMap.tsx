@@ -238,14 +238,14 @@ export function RegionTable({
                       style={{ backgroundColor: datum?.color ?? '#CFD8DC' }}
                       aria-hidden="true"
                     />
-                    {datum?.label ?? '—'}
+                    {datum?.label ?? 'n/a'}
                   </span>
                 </td>
                 {columns.map((column) => {
                   const cell = datum?.detail.find((d) => d.label === column);
                   return (
                     <td key={column} className="tabular py-2 pr-3 text-right">
-                      {cell?.value ?? '—'}
+                      {cell?.value ?? 'n/a'}
                     </td>
                   );
                 })}

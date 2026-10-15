@@ -6,7 +6,7 @@ import type { Provenance } from '@/types';
  *
  * Mandinka, Wolof and Pulaar have no CLDR month names or number formats to
  * draw on, so an Intl locale built from the language tag would silently fall
- * back to the browser default — which on a phone configured in French would
+ * back to the browser default, which on a phone configured in French would
  * render a Wolof page's dates in French. One stable, documented format is
  * more honest than that, and digits are read the same way in all four
  * languages. Revisit if and when CLDR data lands.

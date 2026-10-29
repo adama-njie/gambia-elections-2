@@ -3,19 +3,25 @@ import type { ElectionResult } from '@/types';
 /**
  * Presidential results, 1996-2021.
  *
- * National figures are the IEC's announced totals as recorded by observer
- * missions and the standard secondary tables. They are tagged `reported`
- * rather than `official` for one specific reason: the EU Election
- * Observation Mission's 2021 final report notes that the IEC published no
- * results on its website and recommends polling-station-level publication.
- * Until the IEC publishes its own machine-readable archive, nothing here can
- * honestly be called official.
+ * National figures and area-level breakdowns are taken from the IEC's own
+ * published results documents, which the Commission uploaded to iec.gm and
+ * which carry a full constituency-level table for every election in this
+ * period. They are extracted with scripts/extract_iec.py in the companion
+ * data repository and validated against each document's printed national
+ * total before being used here.
  *
- * Regional breakdowns: no official area-level dataset exists in the public
- * record for any of these elections. Rather than invent one, `regional` is
- * populated only for 2016 and 2021, is explicitly tagged `modelled`, and is
- * derived as documented in docs/METHODOLOGY.md. Earlier years carry no
- * regional detail at all.
+ * Earlier versions of this file carried modelled area-level estimates,
+ * because the EU Election Observation Mission's 2021 report recorded that
+ * the IEC published no results on its website and recommended that it do
+ * so. The Commission has since published them. Those estimates have been
+ * replaced by the official figures; they were wrong by an average of 7.9
+ * points per area in 2021 and by as much as 17.5 points in Upper River,
+ * which is why they were labelled modelled and never official.
+ *
+ * Constituency-level extraction is validated for 2006, 2011, 2016 and 2021,
+ * and is within 0.3 per cent for 1996. The 2001 document's Upper River
+ * block could not be read reliably from the published PDF, so that year
+ * carries national figures only.
  */
 export const ELECTIONS: ElectionResult[] = [
   {
@@ -125,19 +131,19 @@ export const ELECTIONS: ElectionResult[] = [
       { candidate: 'Mama Kandeh', party: 'GDC', votes: 89_768, share: 17.07 },
     ],
     regional: [
-      { region: 'BJL', shares: { 'COALITION-2016': 56.4, APRC: 32.1, GDC: 11.5 }, turnout: 55.1, provenance: 'modelled' },
-      { region: 'KMC', shares: { 'COALITION-2016': 58.9, APRC: 28.4, GDC: 12.7 }, turnout: 57.8, provenance: 'modelled' },
-      { region: 'WCR', shares: { 'COALITION-2016': 49.6, APRC: 36.8, GDC: 13.6 }, turnout: 59.4, provenance: 'modelled' },
-      { region: 'NBR', shares: { 'COALITION-2016': 39.2, APRC: 43.1, GDC: 17.7 }, turnout: 60.2, provenance: 'modelled' },
-      { region: 'LRR', shares: { 'COALITION-2016': 41.8, APRC: 41.4, GDC: 16.8 }, turnout: 59.8, provenance: 'modelled' },
-      { region: 'CRR', shares: { 'COALITION-2016': 30.1, APRC: 44.6, GDC: 25.3 }, turnout: 61.1, provenance: 'modelled' },
-      { region: 'URR', shares: { 'COALITION-2016': 33.4, APRC: 42.2, GDC: 24.4 }, turnout: 60.6, provenance: 'modelled' },
+      { region: 'BJL', shares: { 'COALITION-2016': 49.65, APRC: 42.66, GDC: 7.69 }, turnout: 58.82, provenance: 'official' },
+      { region: 'KMC', shares: { 'COALITION-2016': 50.09, APRC: 40.06, GDC: 9.93 }, turnout: 56.02, provenance: 'official' },
+      { region: 'WCR', shares: { 'COALITION-2016': 43.18, APRC: 44.37, GDC: 12.5 }, turnout: 61.64, provenance: 'official' },
+      { region: 'NBR', shares: { 'COALITION-2016': 36.64, APRC: 28.75, GDC: 34.59 }, turnout: 62.63, provenance: 'official' },
+      { region: 'LRR', shares: { 'COALITION-2016': 55.78, APRC: 27.07, GDC: 17.09 }, turnout: 60.04, provenance: 'official' },
+      { region: 'CRR', shares: { 'COALITION-2016': 31.71, APRC: 43.15, GDC: 25.1 }, turnout: 60.04, provenance: 'official' },
+      { region: 'URR', shares: { 'COALITION-2016': 43.97, APRC: 38.32, GDC: 17.66 }, turnout: 55.48, provenance: 'official' },
     ],
     winner: 'Adama Barrow',
     winningParty: 'COALITION-2016',
     margin: 3.65,
     provenance: 'reported',
-    sources: ['iec', 'wiki-2016', 'eu-eom-2021'],
+    sources: ['iec-results-2016', 'iec', 'wiki-2016'],
     context: {
       title: 'The Grand Coalition and the end of 22 years of APRC rule',
       description:
@@ -159,19 +165,19 @@ export const ELECTIONS: ElectionResult[] = [
       { candidate: 'Abdoulie Ebrima Jammeh', party: 'NUP', votes: 8_252, share: 0.96 },
     ],
     regional: [
-      { region: 'BJL', shares: { NPP: 52.6, UDP: 29.4, GDC: 8.1, PDOIS: 5.2, IND: 3.6, NUP: 1.1 }, turnout: 84.2, provenance: 'modelled' },
-      { region: 'KMC', shares: { NPP: 45.1, UDP: 32.8, GDC: 8.9, PDOIS: 6.4, IND: 5.6, NUP: 1.2 }, turnout: 86.1, provenance: 'modelled' },
-      { region: 'WCR', shares: { NPP: 50.8, UDP: 30.6, GDC: 10.8, PDOIS: 4.3, IND: 2.5, NUP: 1.0 }, turnout: 88.4, provenance: 'modelled' },
-      { region: 'NBR', shares: { NPP: 56.2, UDP: 26.1, GDC: 12.9, PDOIS: 2.9, IND: 1.1, NUP: 0.8 }, turnout: 90.3, provenance: 'modelled' },
-      { region: 'LRR', shares: { NPP: 54.9, UDP: 27.9, GDC: 12.1, PDOIS: 3.3, IND: 1.1, NUP: 0.7 }, turnout: 90.0, provenance: 'modelled' },
-      { region: 'CRR', shares: { NPP: 58.1, UDP: 21.4, GDC: 17.2, PDOIS: 2.1, IND: 0.6, NUP: 0.6 }, turnout: 91.6, provenance: 'modelled' },
-      { region: 'URR', shares: { NPP: 57.3, UDP: 23.8, GDC: 15.4, PDOIS: 2.2, IND: 0.6, NUP: 0.7 }, turnout: 91.2, provenance: 'modelled' },
+      { region: 'BJL', shares: { NPP: 62.29, UDP: 21.54, GDC: 3.55, PDOIS: 9.12, IND: 3.22, NUP: 0.27 }, turnout: 88.79, provenance: 'official' },
+      { region: 'KMC', shares: { NPP: 49.67, UDP: 29.85, GDC: 10.4, PDOIS: 7.42, IND: 2.25, NUP: 0.41 }, turnout: 89.92, provenance: 'official' },
+      { region: 'WCR', shares: { NPP: 43.78, UDP: 32.41, GDC: 17.56, PDOIS: 3.31, IND: 2.15, NUP: 0.79 }, turnout: 90.21, provenance: 'official' },
+      { region: 'NBR', shares: { NPP: 57.79, UDP: 26.62, GDC: 9.61, PDOIS: 2.65, IND: 2.03, NUP: 1.31 }, turnout: 90.06, provenance: 'official' },
+      { region: 'LRR', shares: { NPP: 46.25, UDP: 45.96, GDC: 4.48, PDOIS: 0.88, IND: 1.16, NUP: 1.27 }, turnout: 90.11, provenance: 'official' },
+      { region: 'CRR', shares: { NPP: 64.35, UDP: 20.84, GDC: 9.41, PDOIS: 1.97, IND: 1.99, NUP: 1.45 }, turnout: 89.0, provenance: 'official' },
+      { region: 'URR', shares: { NPP: 74.82, UDP: 9.83, GDC: 9.73, PDOIS: 2.83, IND: 1.3, NUP: 1.49 }, turnout: 85.23, provenance: 'official' },
     ],
     winner: 'Adama Barrow',
     winningParty: 'NPP',
     margin: 25.51,
     provenance: 'reported',
-    sources: ['iec', 'wiki-2021', 'eu-eom-2021'],
+    sources: ['iec-results-2021', 'iec', 'wiki-2021'],
     context: {
       title: 'Barrow re-elected on his own party, opposition split five ways',
       description:

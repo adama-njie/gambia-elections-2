@@ -20,6 +20,27 @@ export const SOURCES: Source[] = [
     date: '2026',
   },
   {
+    id: 'iec-results-2021',
+    title: 'Presidential Election Results, 4th December 2021 (constituency level)',
+    publisher: 'IEC',
+    url: 'https://iec.gm/wp-content/uploads/2025/07/Presidential-Election-Results-4th-December-2021.pdf',
+    date: '2025-07',
+  },
+  {
+    id: 'iec-results-2016',
+    title: 'Presidential Election Results, 1st December 2016 (constituency level)',
+    publisher: 'IEC',
+    url: 'https://iec.gm/wp-content/uploads/2025/07/Presidential-Election-Results-1st-December-2016.pdf',
+    date: '2025-07',
+  },
+  {
+    id: 'iec-downloads',
+    title: 'IEC document downloads, including results for every presidential election since 1996',
+    publisher: 'IEC',
+    url: 'https://iec.gm/download/',
+    date: '2026-10',
+  },
+  {
     id: 'eu-eom-2021',
     title: 'European Union Election Observation Mission, The Gambia 2021: Final Report',
     publisher: 'European Union',

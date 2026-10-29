@@ -87,7 +87,7 @@ export const en = {
   'prov.official.help': 'Published by the IEC or another primary official record.',
   'prov.reported.label': 'Reported',
   'prov.reported.help':
-    'The IEC announced these figures, but has not published them in a machine-readable archive. Recorded consistently by observer missions and standard secondary tables.',
+    'Announced by the IEC and recorded consistently by observer missions and standard secondary tables, but not re-derived here from a primary IEC document.',
   'prov.modelled.label': 'Modelled',
   'prov.modelled.help':
     'Produced by this platform’s model from official inputs. Not a real-world observation. See Methodology.',
@@ -372,8 +372,8 @@ export const en = {
   'forecast.areas.subtitle':
     'Uniform national swing applied to the modelled 2021 area baseline, with the UNITE share of the UDP base scaled by urbanisation. Shading reflects the size of the lead.',
   'forecast.areas.notice':
-    'No official area-level results dataset exists in the public record for any Gambian presidential election. These areas start from a {modelled} 2021 baseline, not a published one. Treat the national figures as far more reliable than any single area.',
-  'forecast.areas.noticeModelled': 'modelled',
+    'Area baselines are the IEC\u2019s own published constituency results, aggregated to administrative area.',
+  'forecast.areas.noticeModelled': 'The projection applied to them is modelled: it is this platform\u2019s estimate, not an observation, and an area-level projection carries more uncertainty than the national figure.',
   'forecast.areas.mapCaption': 'Projected leading bloc by administrative area',
   'forecast.areas.tableCaption': 'Projected vote share by administrative area and bloc',
   'forecast.areas.votesNote':
@@ -393,10 +393,10 @@ export const en = {
   'regions.lede':
     'The Gambia tabulates results across seven administrative areas, which are also the IEC’s reporting units. This page shows how the vote is distributed across them, and is explicit that the distribution itself is modelled, not published.',
 
-  'regions.notice.title': 'These area figures are modelled, not official',
+  'regions.notice.title': 'These area figures are the IEC\u2019s official results',
   'regions.notice.body':
-    'No official area-level or polling-station dataset exists in the public record for any Gambian presidential election. The EU Election Observation Mission’s 2021 final report notes that the IEC published no results on its website and recommends publishing results disaggregated by polling station. The area shares below are therefore {estimates}, constrained to reproduce the verified national totals and built as documented in the methodology. They are useful for seeing shape and pattern. They are not evidence about any particular area, and they must not be cited as results. If the IEC publishes real disaggregated data, this page is designed to take it as a drop-in replacement.',
-  'regions.notice.estimates': 'this platform’s estimates',
+    'The Commission publishes a constituency-level results table for every presidential election since 1996 at iec.gm. The figures on this page are extracted from those documents and reconciled against each document\u2019s own printed national total before use.',
+  'regions.notice.estimates': 'Earlier versions of this page carried modelled estimates, because the EU Election Observation Mission\u2019s 2021 report recorded that the IEC published no results on its website and recommended publication disaggregated by polling station. The Commission has since published them. The estimates they replace were wrong by an average of 7.9 points per area in 2021, which is why they were labelled modelled and never official.',
 
   'regions.yearGroupLabel': 'Select election year',
   'regions.leadByArea.title': '{year}: leading party by area',
@@ -639,7 +639,7 @@ export const en = {
 
   'data.levels.title': 'Provenance levels',
   'data.levels.subtitle': 'Applied to every figure in the interface.',
-  'data.levels.officialUnused': 'Currently unused: no primary official dataset is publicly available.',
+  'data.levels.officialUnused': 'In use: area-level results are taken from the IEC\u2019s published constituency tables.',
 
   'data.downloads.title': 'Downloads',
   'data.downloads.subtitle':

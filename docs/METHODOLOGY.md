@@ -35,7 +35,7 @@ Four provenance levels, displayed as a badge on every figure in the interface:
 
 | Level | Meaning |
 | --- | --- |
-| `official` | Published by the IEC or another primary official record. **Currently unused.** |
+| `official` | Extracted from a primary IEC document. Used for area-level results 1996-2021. |
 | `reported` | Figures the IEC announced, recorded consistently by observer missions and standard secondary tables. All national results 1996–2021. |
 | `modelled` | Produced by this platform. All area-level breakdowns and all forecasts. |
 | `poll` | Survey data from a named pollster, with sample size and margin of error attached. |
@@ -150,19 +150,21 @@ those counts inherit that assumption's error.
 
 ## 4. The area baselines
 
-No official area-level dataset exists for any Gambian presidential election. Rather than invent one
-silently, this project:
+The IEC publishes a constituency-level results table for every presidential election since 1996,
+at https://iec.gm/download/. Each document carries a real text layer, so the figures can be read
+directly rather than estimated. `scripts/extract_iec.py` in the companion data repository reads
+them, reconstructs the table from word coordinates, and validates each year against that
+document's own printed national total before the figures are used.
 
-- populates `regional` only for 2016 and 2021,
-- tags every row `modelled`,
-- constrains the rows to reproduce the verified national totals,
-- fails the test suite if any row is labelled anything else,
-- and says so in the interface wherever area data is shown.
+Extraction is validated exactly for 2006, 2011, 2016 and 2021, is within 0.3 per cent for 1996,
+and could not be completed for the 2001 Upper River block, which is missing cells in the published
+PDF's text layer. 2001 therefore carries national figures only.
 
-The estimates reflect well-documented regional patterns: urban Kanifing least favourable to the
-incumbent, Central and Upper River most favourable, the GDC vote concentrated in Central and Upper
-River. They are useful for seeing shape and pattern. **They are not evidence about any particular
-area.**
+Until October 2026 this platform instead carried modelled area-level estimates, on the basis that
+the EU Election Observation Mission's 2021 report recorded that the IEC published no results on its
+website. That is no longer true. The estimates have been replaced. For the record, they were wrong
+by an average of 7.9 points per area in 2021 and by 17.5 points in Upper River, which is exactly
+why they were labelled modelled and never official.
 
 ## 5. Known limitations
 

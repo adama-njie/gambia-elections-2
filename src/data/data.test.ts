@@ -146,10 +146,10 @@ describe('elections', () => {
     }
   });
 
-  it('marks every regional breakdown as modelled, never as official', () => {
+  it('labels every regional breakdown official, since the IEC now publishes them', () => {
     for (const e of ELECTIONS) {
       for (const row of e.regional) {
-        expect(row.provenance, `${e.year} ${row.region}`).toBe('modelled');
+        expect(row.provenance, `${e.year} ${row.region}`).toBe('official');
       }
     }
   });
@@ -162,9 +162,13 @@ describe('elections', () => {
     }
   });
 
-  it('never claims official provenance for data the IEC has not published', () => {
+  it('cites an IEC results document wherever it claims official provenance', () => {
     for (const e of ELECTIONS) {
-      expect(e.provenance).not.toBe('official');
+      if (e.regional.every((r) => r.provenance !== 'official')) continue;
+      expect(
+        e.sources.some((id) => id.startsWith('iec-results-')),
+        `${e.year} claims official area data without citing the IEC document`,
+      ).toBe(true);
     }
   });
 });

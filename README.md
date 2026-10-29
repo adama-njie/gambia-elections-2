@@ -16,8 +16,9 @@ A tool for journalists, researchers, civil society and voters who want to unders
 election rather than be told who will win. Three principles shape it:
 
 1. **Provenance on every figure.** Four trust levels (official, reported, modelled, survey),
-   displayed as a badge wherever a number appears. Nothing currently carries the *official* label,
-   because the IEC has not published a machine-readable results archive. Claiming otherwise would be
+   displayed as a badge wherever a number appears. Area-level results carry the *official* label,
+   because they are extracted from the IEC's own published constituency tables and reconciled
+   against each document's printed national total. Overstating provenance would be
    false, so the app does not.
 2. **A model you can argue with.** The forecast is a documented Monte Carlo simulation, not a
    language model. Same inputs, same outputs, every time, on any machine, with no API key and no

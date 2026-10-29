@@ -391,7 +391,7 @@ export const en = {
   'regions.eyebrow': 'Seven administrative areas',
   'regions.title': 'The electoral map',
   'regions.lede':
-    'The Gambia tabulates results across seven administrative areas, which are also the IEC’s reporting units. This page shows how the vote is distributed across them, and is explicit that the distribution itself is modelled, not published.',
+    'The Gambia tabulates results across seven administrative areas, which are also the IEC\u2019s reporting units. This page shows how the vote is distributed across them, using the Commission\u2019s own published constituency tables.',
 
   'regions.notice.title': 'These area figures are the IEC\u2019s official results',
   'regions.notice.body':

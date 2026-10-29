@@ -105,7 +105,7 @@ export default function Regions() {
       <Card>
         <SectionHeading
           title={t('regions.leadByArea.title', { year })}
-          provenance="modelled"
+          provenance="official"
           subtitle={t('regions.leadByArea.subtitle')}
         />
         <div className="grid gap-6 lg:grid-cols-2">
@@ -135,7 +135,7 @@ export default function Regions() {
               }`,
               year,
             })}
-            provenance="modelled"
+            provenance="official"
             action={
               <button type="button" onClick={() => setSelected(null)} className="btn-ghost">
                 {t('common.clear')}

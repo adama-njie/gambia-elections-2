@@ -91,7 +91,18 @@ export const PARTIES: Party[] = [
     founded: 1996,
     leader: 'Fabakary Tombong Jatta',
     color: '#81C784',
-    profile: "Yahya Jammeh's former ruling party, in power 1996-2016. Retains a residual base in Foni.",
+    profile:
+      "Yahya Jammeh's former ruling party, in power 1996-2016. Allied with the NPP from 2021 and renewed that alliance in August 2026. Jammeh, in exile, dismissed Fabakary Tombong Jatta and his executive over the 2021 endorsement of Barrow; they rejected the dismissal and stayed, which is the origin of the party's split.",
+    active: true,
+  },
+  {
+    id: 'APRC-NTA',
+    name: 'APRC No To Alliance Movement',
+    founded: 2021,
+    leader: 'Almameh Gibba',
+    color: '#7E57C2',
+    profile:
+      'The faction of the APRC that rejected the party’s 2021 alliance with Barrow. Aligned with Yahya Jammeh in exile, who endorsed Almameh Gibba as its candidate for 5 December 2026. Its base is Foni, the APRC heartland in West Coast Region.',
     active: true,
   },
   {
@@ -178,7 +189,7 @@ export const COALITIONS: Coalition[] = [
     name: 'NPP-led Alliance',
     leadParty: 'NPP',
     flagbearer: 'barrow',
-    members: ['NPP', 'GDC', 'APP', 'NRP', 'GMP'],
+    members: ['NPP', 'GDC', 'APP', 'NRP', 'GMP', 'APRC'],
     formed: '2026-09',
     color: '#1F6F8B',
     cohesion: 'formal',
@@ -225,6 +236,19 @@ export const COALITIONS: Coalition[] = [
       'Coordinated by Halifa Sallah and Sidia Jatta, founded on 12 September 2026 with PDOIS among the party signatories. On 3 November 2026 it elected Lamin J. Darboe, leader of the National Unity Party, as its flagbearer: a consensus attempt among seven aspirants failed, so the bloc’s Good Governance Committee ran a vote, and the executive committee ratified the result. He files his nomination on 11 November. One aspirant, Amadou Kah, withdrew from both the contest and the coalition. The choice cuts across the memorandum the NUP signed with UNITE in September, which the NUP says still stands.',
     sources: ['point-team-gambia-flagbearer', 'alkamba-team-gambia', 'point-grand-coalition', 'riotimes-three-camps'],
   },
+  {
+    id: 'no-to-alliance',
+    name: 'No To Alliance Movement',
+    leadParty: 'APRC-NTA',
+    flagbearer: 'gibba',
+    members: ['APRC-NTA'],
+    formed: '2026',
+    color: '#7E57C2',
+    cohesion: 'announced',
+    summary:
+      'The APRC faction that refused the party’s alliance with Barrow, running its own candidate rather than backing any of the four main blocs. Yahya Jammeh, in exile in Equatorial Guinea since 2017, endorsed Almameh Gibba, the National Assembly Member for Foni Kansala, as its standard-bearer. Gibba has pledged to facilitate Jammeh’s return if he wins. The bloc matters out of proportion to its likely national share: 17.5 per cent of Mama Kandeh’s 2021 vote was cast in the five Foni constituencies, and that vote now has somewhere else to go.',
+    sources: ['point-jammeh-gibba', 'kerrfatou-gibba-pledge', 'iec-results-2021'],
+  },
 ];
 
 const coalitionById = new Map(COALITIONS.map((c) => [c.id, c]));
@@ -243,6 +267,7 @@ export const COALITION_MOVEMENTS: Record<string, string[]> = {
     'Gambia Movement for Progress (withdrew 24 September 2026, now with the NPP alliance)',
   ],
   'gambia-first': ['Seven further parties and movements (memorandum of 14 August 2026)'],
+  'no-to-alliance': ['Aligned with Yahya Jammeh, in exile since 2017'],
   'team-gambia': [
     'Coordinated by Halifa Sallah and Sidia Jatta',
     'Further party and movement signatories announced 18 September 2026',

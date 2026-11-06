@@ -62,6 +62,17 @@ export const CANDIDATES_2026: Candidate2026[] = [
     status: 'declared',
   },
   {
+    id: 'gibba',
+    name: 'Almameh Gibba',
+    shortName: 'Gibba',
+    party: 'APRC-NTA',
+    coalition: 'no-to-alliance',
+    role: 'National Assembly Member for Foni Kansala',
+    bio: 'Standard-bearer of the APRC No To Alliance Movement, endorsed by Yahya Jammeh from exile. Sits for Foni Kansala, the constituency that gave Mama Kandeh his single strongest result in 2021 at 70.7 per cent. Has pledged to facilitate Jammeh’s return to The Gambia if elected, and that no foreign troops will remain.',
+    color: '#7E57C2',
+    status: 'declared',
+  },
+  {
     id: 'badjie',
     name: 'Bakary K. Badjie',
     shortName: 'Badjie',
@@ -97,7 +108,7 @@ export function candidateShortName(id: string): string {
 }
 
 /** Candidates the forecast model simulates. Minor independents fold into "Other". */
-export const MODELLED_CANDIDATES = ['barrow', 'darboe', 'bensouda', 'lj-darboe'] as const;
+export const MODELLED_CANDIDATES = ['barrow', 'darboe', 'bensouda', 'lj-darboe', 'gibba'] as const;
 
 /**
  * Figures who moved into the incumbent alliance rather than standing.

@@ -203,9 +203,9 @@ describe('parties and coalitions', () => {
     }
   });
 
-  it('records the four 2026 blocs', () => {
+  it('records the five 2026 blocs', () => {
     expect(COALITIONS.map((c) => c.id).sort()).toEqual(
-      ['coalition-2026', 'gambia-first', 'npp-alliance', 'team-gambia'].sort(),
+      ['coalition-2026', 'gambia-first', 'no-to-alliance', 'npp-alliance', 'team-gambia'].sort(),
     );
   });
 });

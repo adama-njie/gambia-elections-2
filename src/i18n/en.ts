@@ -562,6 +562,12 @@ export const en = {
   'meth.coef.youthTurnout.name': 'Youth mobilisation',
   'meth.coef.youthTurnout.body':
     'Points lost per point of extra under-35 turnout, of which {share} per cent accrues specifically to UNITE.',
+  'meth.coef.foniShare.name': 'Foni share of the GDC vote',
+  'meth.coef.foniShare.body':
+    'From the IEC’s 2021 constituency table: 18,539 of Mama Kandeh’s 105,902 votes were cast in the five Foni constituencies. Foni is the APRC heartland, and the No To Alliance candidate is the sitting member for Foni Kansala, which Kandeh carried with 70.7 per cent.',
+  'meth.coef.foniDefect.name': 'Foni vote to No To Alliance',
+  'meth.coef.foniDefect.body':
+    'The share of that Foni vote assumed to follow Yahya Jammeh’s endorsement to the No To Alliance candidate rather than Kandeh into the NPP alliance. It is carved out before transfer efficiency applies, so even a perfect transfer leaves the alliance short of the headline 67.55 per cent. A reasoned prior, not an observation: the faction has never contested a presidential election.',
   'meth.coef.uniteSplit.name': 'UNITE share of the UDP base',
   'meth.coef.uniteSplit.body':
     'In the absence of polling, the share of the UDP’s 2021 vote assumed to have moved to UNITE. Scaled regionally between {floor} and {ceiling} times this figure by urbanisation, reflecting Bensouda’s municipal base.',

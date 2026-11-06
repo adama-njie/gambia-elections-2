@@ -45,6 +45,24 @@ const SERIES = [...CANDIDATE_IDS, OTHER];
 
 export const MODEL_CONSTANTS = {
   /**
+   * Share of the GDC's 2021 national vote that was cast in the five Foni
+   * constituencies, from the IEC's own 2021 constituency table: 18,539 of
+   * Mama Kandeh's 105,902 votes. Foni is the APRC heartland, and the No To
+   * Alliance candidate is the sitting member for Foni Kansala, so this is
+   * the part of the GDC vote least likely to follow Kandeh into the NPP
+   * alliance.
+   */
+  gdcFoniShare: 0.175,
+  /**
+   * Of that Foni vote, the share assumed to follow Jammeh's endorsement to
+   * the No To Alliance candidate rather than Kandeh into the alliance. A
+   * reasoned prior, not an observation: the faction has never contested a
+   * presidential election, so there is no precedent to fit.
+   */
+  foniToNoAlliance: 0.6,
+  /** Foni's share of West Coast's 2021 GDC vote: 18,539 of 56,936. */
+  foniShareOfWestCoastGdc: 0.326,
+  /**
    * Share of the UDP's 2021 vote that the model assumes has moved to
    * UNITE in the absence of any polling, reflecting Bensouda's split from
    * the UDP and his urban municipal base. Scaled by urbanisation at
@@ -162,7 +180,12 @@ export function structuralPrior(transferEfficiency: number): Shares {
   const te = Math.max(0, Math.min(1, transferEfficiency / 100));
   const { uniteSplitOfUdp, leakageToAbstention } = MODEL_CONSTANTS;
 
-  const absorbed = (s.GDC ?? 0) + (s.IND ?? 0);
+  // The Foni portion of the GDC vote is carved out before transfer: with a
+  // Jammeh-endorsed candidate on the ballot it is not the alliance's to
+  // inherit. What remains is what transfer efficiency acts on.
+  const gdc = s.GDC ?? 0;
+  const gibbaBase = gdc * MODEL_CONSTANTS.gdcFoniShare * MODEL_CONSTANTS.foniToNoAlliance;
+  const absorbed = gdc - gibbaBase + (s.IND ?? 0);
   const transferred = absorbed * te;
   const leaked = absorbed - transferred;
 
@@ -186,6 +209,7 @@ export function structuralPrior(transferEfficiency: number): Shares {
     darboe: darboe + share(darboe),
     bensouda: bensoudaBase + share(bensoudaBase),
     'lj-darboe': pdois + share(pdois),
+    gibba: gibbaBase,
     other: scattered,
   });
 }
@@ -207,6 +231,7 @@ export function pollingPrior(undecidedToChallengers: number): Shares {
     darboe: poll.shares.darboe ?? 0,
     bensouda: poll.shares.bensouda ?? 0,
     'lj-darboe': poll.shares['lj-darboe'] ?? 0,
+    gibba: poll.shares.gibba ?? 0,
     other: poll.shares.other ?? 0,
   };
 
@@ -290,7 +315,12 @@ export function centralShares(params: ScenarioParams): Shares {
 
   const blended: Shares = {};
   for (const key of SERIES) {
-    blended[key] = (1 - w) * (structural[key] ?? 0) + w * (polling[key] ?? 0);
+    // No published poll has asked about the No To Alliance candidate, whose
+    // candidacy postdates both surveys. Treating that absence as a measured
+    // zero would be wrong, so the polling weight is not applied to him.
+    const pollIsInformative = key !== 'gibba' || LATEST_POLL.shares.gibba !== undefined;
+    const weight = pollIsInformative ? w : 0;
+    blended[key] = (1 - weight) * (structural[key] ?? 0) + weight * (polling[key] ?? 0);
   }
 
   const drivers = computeDrivers(params);
@@ -307,6 +337,10 @@ export function centralShares(params: ScenarioParams): Shares {
   // Redistribute the mirror image of the incumbent's swing. The youth
   // component is weighted towards UNITE; the rest moves in proportion to
   // each challenger's existing size.
+  // The No To Alliance bloc is deliberately not a "challenger" here. It
+  // does not consolidate with the mainstream opposition, and undecided
+  // voters breaking against the incumbent are not plausibly breaking for a
+  // candidate campaigning on Yahya Jammeh's return.
   const challengerKeys = ['darboe', 'bensouda', 'lj-darboe'];
   const challengerTotal = challengerKeys.reduce((sum, k) => sum + (blended[k] ?? 0), 0);
   const youthPortion = Math.min(Math.abs(youthSwing), Math.abs(actualSwing)) * Math.sign(-actualSwing);
@@ -474,12 +508,19 @@ export function projectRegions(
     const uniteSplit =
       c.uniteSplitOfUdp * (c.uniteUrbanFloor + c.uniteUrbanGain * region.urbanShare);
 
-    const absorbed = (s.GDC ?? 0) + (s.IND ?? 0);
+    // All five Foni constituencies sit in West Coast, so the No To Alliance
+    // base is concentrated there and is close to nil elsewhere.
+    const gdcRegion = s.GDC ?? 0;
+    const foniPortion =
+      region.code === 'WCR' ? gdcRegion * c.foniShareOfWestCoastGdc : 0;
+    const gibbaRegion = foniPortion * c.foniToNoAlliance;
+    const absorbed = gdcRegion - gibbaRegion + (s.IND ?? 0);
     const regionBase: Shares = normalise({
       barrow: (s.NPP ?? 0) + absorbed * te,
       darboe: (s.UDP ?? 0) * (1 - uniteSplit),
       bensouda: (s.UDP ?? 0) * uniteSplit,
       'lj-darboe': (s.PDOIS ?? 0) + (s.NUP ?? 0),
+      gibba: gibbaRegion,
       other: absorbed * (1 - te),
     });
 

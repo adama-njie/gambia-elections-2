@@ -104,6 +104,27 @@ export const SOURCES: Source[] = [
     date: '2026-10',
   },
   {
+    id: 'point-jammeh-gibba',
+    title: 'Jammeh names Gibba as standard-bearer for 2026 presidential election',
+    publisher: 'The Point',
+    url: 'https://thepoint.gm/africa/gambia/headlines/jammeh-names-gibba-as-standard-bearer-for-2026-presidential-election',
+    date: '2026',
+  },
+  {
+    id: 'kerrfatou-gibba-pledge',
+    title: 'Gibba pledges to facilitate Jammeh’s return if No To Alliance wins December election',
+    publisher: 'Kerr Fatou',
+    url: 'https://www.kerrfatou.com/gibba-pledges-to-facilitate-jammehs-return-if-no-to-alliance-wins-december-election/',
+    date: '2026',
+  },
+  {
+    id: 'kerrfatou-aprc-renews',
+    title: 'APRC renews alliance with Barrow’s NPP, backs president’s 2026 re-election bid',
+    publisher: 'Kerr Fatou',
+    url: 'https://www.kerrfatou.com/aprc-renews-alliance-with-barrows-npp-backs-presidents-2026-re-election-bid/',
+    date: '2026-08',
+  },
+  {
     id: 'point-talib-flagbearer',
     title: 'Talib Ahmed Bensouda emerges flagbearer of Coalition 2026',
     publisher: 'The Point',

@@ -188,6 +188,18 @@ export default function Methodology() {
             })}
           </Coefficient>
           <Coefficient
+            name={t('meth.coef.foniShare.name')}
+            value={`${(c.gdcFoniShare * 100).toFixed(1)}%`}
+          >
+            {t('meth.coef.foniShare.body')}
+          </Coefficient>
+          <Coefficient
+            name={t('meth.coef.foniDefect.name')}
+            value={`${c.foniToNoAlliance * 100}%`}
+          >
+            {t('meth.coef.foniDefect.body')}
+          </Coefficient>
+          <Coefficient
             name={t('meth.coef.uniteSplit.name')}
             value={`${c.uniteSplitOfUdp * 100}%`}
           >

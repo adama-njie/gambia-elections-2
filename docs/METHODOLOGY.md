@@ -108,6 +108,27 @@ Inflation carries the largest economic coefficient because price levels are felt
 than aggregate growth. The turnout term is negative on the incumbent because higher turnout in The
 Gambia has historically brought in newer, younger and more urban voters.
 
+### 3.4a The Foni carve-out
+
+The APRC split after the party allied with Barrow in 2021. The faction that refused, the No To
+Alliance Movement, is running its own candidate in 2026: Almameh Gibba, National Assembly Member
+for Foni Kansala, endorsed by Yahya Jammeh from exile.
+
+This matters for the arithmetic. The IEC's 2021 constituency table shows that 18,539 of Mama
+Kandeh's 105,902 votes, 17.5 per cent, were cast in the five Foni constituencies, the APRC
+heartland. Kandeh carried Foni Kansala with 70.7 per cent. With a Jammeh-endorsed candidate now on
+the ballot there, that portion of the GDC vote is not straightforwardly the alliance's to inherit.
+
+The model therefore carves out `gdcFoniShare x foniToNoAlliance` of the GDC vote before transfer
+efficiency is applied, and assigns it to the No To Alliance bloc. The effect is that even a perfect
+transfer leaves the incumbent alliance at 66.3 per cent of the 2021 vote rather than the 67.55 per
+cent its arithmetic case claims.
+
+The No To Alliance bloc is deliberately excluded from the opposition-consolidation and
+undecided-break logic. It does not consolidate with the mainstream opposition, and undecided voters
+breaking against the incumbent are not plausibly breaking for a candidate campaigning on Jammeh's
+return.
+
 ### 3.5 Opposition consolidation
 
 The mechanism that decided 2016 and whose absence decided 2021, so it gets its own lever rather than

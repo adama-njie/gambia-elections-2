@@ -21,10 +21,23 @@ describe('structural prior', () => {
     }
   });
 
-  it('reproduces the arithmetic case at full transfer', () => {
-    // Barrow 53.23 + GDC 12.32 + Faal 2.00 = 67.55 of the 2021 vote.
+  it('caps the arithmetic case below the headline 67.55 per cent', () => {
+    // Barrow 53.23 + GDC 12.32 + Faal 2.00 = 67.55 of the 2021 vote, which
+    // is the president's claim. The model does not grant all of it even at
+    // perfect transfer: the Foni share of the GDC vote is carved out first,
+    // because a Jammeh-endorsed candidate is on the ballot there.
     const prior = structuralPrior(100);
-    expect(prior.barrow).toBeCloseTo(67.55, 1);
+    const carveOut = 12.32 * 0.175 * 0.6;
+    expect(carveOut).toBeCloseTo(1.29, 1);
+    expect(prior.barrow).toBeCloseTo(67.55 - carveOut, 1);
+    expect(prior.barrow).toBeLessThan(67.55);
+  });
+
+  it('gives the No To Alliance bloc the carved-out Foni vote', () => {
+    // The carve-out does not depend on transfer efficiency: it is removed
+    // before transfer applies, so it is the same at either extreme.
+    expect(structuralPrior(100).gibba).toBeCloseTo(structuralPrior(0).gibba!, 1);
+    expect(structuralPrior(72).gibba!).toBeGreaterThan(0.9);
   });
 
   it('gives the incumbent less as transfer efficiency falls', () => {

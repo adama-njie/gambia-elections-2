@@ -125,6 +125,20 @@ export const SOURCES: Source[] = [
     date: '2026-08',
   },
   {
+    id: 'kerrfatou-gmc-alliance',
+    title: 'Mai Ahmed Fatty says GMC brings decency and integrity to NPP-led alliance',
+    publisher: 'Kerr Fatou',
+    url: 'https://www.kerrfatou.com/mai-ahmed-fatty-says-gmc-brings-decency-and-integrity-to-npp-led-alliance/',
+    date: '2026',
+  },
+  {
+    id: 'kerrfatou-gmc-votes',
+    title: 'GMC leader Mai Ahmed Fatty pledges 100,000 votes for President Barrow’s re-election bid',
+    publisher: 'Kerr Fatou',
+    url: 'https://www.kerrfatou.com/gmc-leader-mai-ahmed-fatty-pledges-100000-votes-for-president-barrows-re-election-bid/',
+    date: '2026-06',
+  },
+  {
     id: 'point-talib-flagbearer',
     title: 'Talib Ahmed Bensouda emerges flagbearer of Coalition 2026',
     publisher: 'The Point',

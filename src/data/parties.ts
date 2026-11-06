@@ -113,6 +113,16 @@ export const PARTIES: Party[] = [
     active: true,
   },
   {
+    id: 'GMC',
+    name: 'Gambia Moral Congress',
+    founded: 2009,
+    leader: 'Mai Ahmed Fatty',
+    color: '#8E6FA8',
+    profile:
+      'Led by Mai Ahmed Fatty, a former Interior Minister under Barrow. Has backed the president since 2021 and formally joined the NPP grand coalition in December 2024. Fatty serves as National Coordinator of the alliance for 2026 and has pledged to deliver 100,000 votes. Not to be confused with the Gambia Movement for Progress, a separate organisation that joined the same alliance in September 2026.',
+    active: true,
+  },
+  {
     id: 'GMP',
     name: 'Gambia Movement for Progress',
     leader: 'Sidat Yaffa',
@@ -189,7 +199,7 @@ export const COALITIONS: Coalition[] = [
     name: 'NPP-led Alliance',
     leadParty: 'NPP',
     flagbearer: 'barrow',
-    members: ['NPP', 'GDC', 'APP', 'NRP', 'GMP', 'APRC'],
+    members: ['NPP', 'GDC', 'APP', 'NRP', 'GMC', 'GMP', 'APRC'],
     formed: '2026-09',
     color: '#1F6F8B',
     cohesion: 'formal',

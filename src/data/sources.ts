@@ -83,6 +83,27 @@ export const SOURCES: Source[] = [
     date: '2026-09',
   },
   {
+    id: 'kerrfatou-gmp-npp',
+    title: 'GMP joins NPP alliance hours after withdrawing from Coalition 2026',
+    publisher: 'Kerr Fatou',
+    url: 'https://www.kerrfatou.com/gmp-joins-npp-alliance-hours-after-withdrawing-from-coalition-2026/',
+    date: '2026-09-24',
+  },
+  {
+    id: 'point-gmp-withdraws',
+    title: 'GMP withdraws from Coalition 2026, cites disrespect for agreements',
+    publisher: 'The Point',
+    url: 'https://thepoint.gm/africa/gambia/headlines/gmp-withdraws-from-coalition-2026-cites-disrespect-for-agreements',
+    date: '2026-09-24',
+  },
+  {
+    id: 'kerrfatou-hamat-bah',
+    title: 'Minister Hamat Bah warns NPP alliance against defeat, says goal is to keep Barrow in office',
+    publisher: 'Kerr Fatou',
+    url: 'https://www.kerrfatou.com/minister-hamat-bah-warns-npp-alliance-against-defeat-says-goal-is-to-keep-barrow-in-office/',
+    date: '2026-10',
+  },
+  {
     id: 'point-talib-flagbearer',
     title: 'Talib Ahmed Bensouda emerges flagbearer of Coalition 2026',
     publisher: 'The Point',

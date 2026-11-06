@@ -81,7 +81,8 @@ export const PARTIES: Party[] = [
     founded: 1996,
     leader: 'Hamat Bah',
     color: '#9575CD',
-    profile: 'Long-running small party with a base in the North Bank; has served in government under Barrow.',
+    profile:
+      'Long-running small party with a base in the North Bank. The only Coalition 2016 member that stayed with Barrow when he formed the NPP, and it backs his 2026 bid while keeping its own identity. Hamat Bah maintains his own long-standing presidential ambition.',
     active: true,
   },
   {
@@ -98,6 +99,15 @@ export const PARTIES: Party[] = [
     name: 'PASTEF Gambia',
     color: '#4DB6AC',
     profile: 'Pan-Africanist movement modelled on its Senegalese namesake; member of Coalition 2026.',
+    active: true,
+  },
+  {
+    id: 'GMP',
+    name: 'Gambia Movement for Progress',
+    leader: 'Sidat Yaffa',
+    color: '#5C8A5C',
+    profile:
+      'Led by Professor Sidat Yaffa. Signed up to Coalition 2026 in August 2026, withdrew on 24 September citing breaches of the coalition’s internal-democracy and collective-decision clauses, and allied with the NPP the same day. Yaffa was explicit that the party is not merging into the NPP.',
     active: true,
   },
   {
@@ -168,7 +178,7 @@ export const COALITIONS: Coalition[] = [
     name: 'NPP-led Alliance',
     leadParty: 'NPP',
     flagbearer: 'barrow',
-    members: ['NPP', 'GDC', 'APP', 'NRP'],
+    members: ['NPP', 'GDC', 'APP', 'NRP', 'GMP'],
     formed: '2026-09',
     color: '#1F6F8B',
     cohesion: 'formal',
@@ -199,8 +209,8 @@ export const COALITIONS: Coalition[] = [
     color: '#00ACC1',
     cohesion: 'formal',
     summary:
-      'Talib Bensouda emerged as flagbearer on 8 August 2026, after Essa Faal withdrew hours before the vote, with partners signing on 20 August: PASTEF Gambia, Defending the Gambian Interest, the People’s Rights Party, FORWARD Gambia, the National Reform Congress, Gambia Movement for Progress, UNITE and Save The Gambia. The bloc has since lost ground: Gambia Movement for Progress withdrew, and the National Unity Party, which signed a memorandum with UNITE in September and had been named as a partner, saw its own leader elected flagbearer of the rival Team Gambia bloc in November. Bensouda has ruled out rejoining the UDP.',
-    sources: ['point-talib-flagbearer', 'kerrfatou-unite-nup', 'gambiaj-nup-unite', 'standard-landscape'],
+      'Talib Bensouda emerged as flagbearer on 8 August 2026, after Essa Faal withdrew hours before the vote, with partners signing on 20 August: PASTEF Gambia, Defending the Gambian Interest, the People’s Rights Party, FORWARD Gambia, the National Reform Congress, Gambia Movement for Progress, UNITE and Save The Gambia. The bloc has since lost ground: Gambia Movement for Progress withdrew on 24 September and allied with the NPP the same day, and the National Unity Party, which signed a memorandum with UNITE in September and had been named as a partner, saw its own leader elected flagbearer of the rival Team Gambia bloc in November. Bensouda has ruled out rejoining the UDP.',
+    sources: ['point-talib-flagbearer', 'kerrfatou-unite-nup', 'gambiaj-nup-unite', 'point-gmp-withdraws', 'standard-landscape'],
   },
   {
     id: 'team-gambia',
@@ -230,7 +240,7 @@ export const COALITION_MOVEMENTS: Record<string, string[]> = {
     'FORWARD Gambia',
     'National Reform Congress (NRC)',
     'Save The Gambia',
-    'Gambia Movement for Progress (withdrawn)',
+    'Gambia Movement for Progress (withdrew 24 September 2026, now with the NPP alliance)',
   ],
   'gambia-first': ['Seven further parties and movements (memorandum of 14 August 2026)'],
   'team-gambia': [

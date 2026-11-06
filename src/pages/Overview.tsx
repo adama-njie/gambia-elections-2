@@ -9,7 +9,7 @@ import {
   ShareBar,
   Stat,
 } from '@/components/ui';
-import { CANDIDATES_2026, REALIGNED_2026 } from '@/data/candidates';
+import { CANDIDATES_2026, REALIGNED_2026, candidateShortName } from '@/data/candidates';
 import { ELECTION_DAY_2026, ELECTIONS, LATEST_ELECTION } from '@/data/elections';
 import { COALITIONS } from '@/data/parties';
 import { LATEST_POLL, TIMELINE } from '@/data/polls';
@@ -25,9 +25,12 @@ import {
   formatProbability,
 } from '@/lib/format';
 
-/** Surnames are what the tiles have room for. */
-function surname(name: string): string {
-  return name.split(' ').slice(-1)[0] ?? name;
+/**
+ * Short labels for the tiles. Taken from the candidate record rather than
+ * derived, because two candidates in this race share the surname Darboe.
+ */
+function shortLabel(id: string, fallback: string): string {
+  return candidateShortName(id) || fallback;
 }
 
 export default function Overview() {
@@ -72,7 +75,7 @@ export default function Overview() {
         />
         <Stat
           label={t('overview.stat.modelLeader')}
-          value={surname(leader.name)}
+          value={shortLabel(leader.candidate, leader.name)}
           sub={t('overview.stat.modelLeaderSub', {
             share: formatPercent(leader.mean),
             probability: formatProbability(leader.winProbability),
@@ -174,8 +177,8 @@ export default function Overview() {
           <p className="muted mt-4 text-xs leading-relaxed">
             {t('overview.projection.note', {
               margin: formatPercent(forecast.expectedMargin),
-              leader: surname(leader.name),
-              runnerUp: surname(runnerUp.name),
+              leader: shortLabel(leader.candidate, leader.name),
+              runnerUp: shortLabel(runnerUp.candidate, runnerUp.name),
               tooClose: formatProbability(forecast.tooCloseToCall),
             })}
           </p>

@@ -23,7 +23,7 @@ import {
   ShareBar,
   Stat,
 } from '@/components/ui';
-import { getCandidate } from '@/data/candidates';
+import { candidateShortName, getCandidate } from '@/data/candidates';
 import { REGIONS, regionName } from '@/data/regions';
 import { useScenario } from '@/hooks/useScenario';
 import { T, useT } from '@/i18n';
@@ -39,9 +39,13 @@ import {
 } from '@/lib/format';
 import type { RegionCode } from '@/types';
 
-/** Surnames are what the tiles and chart axis have room for. */
-function surname(name: string): string {
-  return name.split(' ').slice(-1)[0] ?? name;
+/**
+ * Short labels for tiles and the chart axis. Taken from the candidate record
+ * rather than derived from the name, because Ousainou Darboe and Lamin J.
+ * Darboe are both contesting and a surname would be ambiguous.
+ */
+function shortLabel(id: string, fallback: string): string {
+  return candidateShortName(id) || fallback;
 }
 
 /**
@@ -76,7 +80,7 @@ export default function Forecast() {
   const runnerUp = forecast.blocs[1]!;
 
   const chartData = forecast.blocs.map((bloc) => ({
-    name: surname(bloc.name),
+    name: shortLabel(bloc.candidate, bloc.name),
     full: bloc.name,
     mean: Number(bloc.mean.toFixed(2)),
     color: bloc.color,
@@ -372,7 +376,7 @@ export default function Forecast() {
           <div className="grid gap-4 sm:grid-cols-3">
             <Stat
               label={t('forecast.stat.modelLeader')}
-              value={surname(leader.name)}
+              value={shortLabel(leader.candidate, leader.name)}
               sub={t('forecast.stat.centralEstimate', { share: formatPercent(leader.mean) })}
               provenance="modelled"
               accent={leader.color}
@@ -389,7 +393,7 @@ export default function Forecast() {
               label={t('forecast.stat.projectedLead')}
               value={formatPercent(forecast.expectedMargin)}
               sub={t('forecast.stat.projectedLeadSub', {
-                runnerUp: surname(runnerUp.name),
+                runnerUp: shortLabel(runnerUp.candidate, runnerUp.name),
                 tooClose: formatProbability(forecast.tooCloseToCall),
               })}
               provenance="modelled"

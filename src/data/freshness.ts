@@ -10,7 +10,7 @@ import { SOURCES } from './sources';
  *
  * A test pins it to be no older than the newest source the dataset cites.
  */
-export const DATA_LAST_UPDATED = '2026-10-15';
+export const DATA_LAST_UPDATED = '2026-11-06';
 
 /**
  * When this particular copy of the application was built. Injected by Vite.

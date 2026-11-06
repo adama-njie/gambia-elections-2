@@ -19,7 +19,7 @@ export const POLLS: Poll[] = [
       barrow: 31,
       darboe: 12,
       bensouda: 18,
-      'pdois-flagbearer': 3,
+      'lj-darboe': 3,
       other: 6,
     },
     undecided: 29,
@@ -36,12 +36,12 @@ export const POLLS: Poll[] = [
       barrow: 32,
       darboe: 25,
       bensouda: 19,
-      'pdois-flagbearer': 2,
+      'lj-darboe': 2,
       other: 5,
     },
     undecided: 17,
     sources: ['kerrfatou-poll', 'wiki-2026'],
-    note: 'Fieldwork ended 10 August 2026, before the Essa Faal alliance in September. Mama Kandeh polled 2 per cent and Essa Faal 3 per cent as separate candidates; both have since joined the NPP-led alliance, so those shares are folded into "other" here rather than attributed to a standing candidate.',
+    note: 'Fieldwork ended 10 August 2026, before the Essa Faal alliance in September. Mama Kandeh polled 2 per cent and Essa Faal 3 per cent as separate candidates; both have since joined the NPP-led alliance, so those shares are folded into "other" here. The Team Gambia share is recorded against that bloc, which had no named flagbearer until 3 November 2026.',
   },
 ];
 
@@ -75,9 +75,18 @@ export const TIMELINE: TimelineEvent[] = [
     endDate: '2026-11-14',
     title: 'Nomination of candidates',
     description:
-      'Candidates file with the IEC. Requirements include a one million dalasi deposit, a declaration of assets, a tax clearance certificate, nomination by registered voters with a minimum drawn from each administrative area, Gambian citizenship by birth, a minimum age of 30 and at least senior secondary education. Reporting conflicts on the per-area nominator threshold, so the IEC text governs. Only after this window closes does a certified field exist.',
+      'Candidates file with the IEC. Requirements include a one million dalasi deposit, a declaration of assets, a tax clearance certificate, nomination by registered voters with a minimum drawn from each administrative area, Gambian citizenship by birth, a minimum age of 30 and at least senior secondary education. Reporting conflicts on the per-area nominator threshold, so the IEC text governs. By 22 October the IEC had issued nomination forms to 25 prospective candidates, 12 to parties and 13 to prospective independents. Reporting conflicts on the deposit, which is given as both D500,000 and D1 million. Only after this window closes does a certified field exist.',
     kind: 'legal',
-    sources: ['malagen-nomination', 'voice-nomination', 'iec-candidates'],
+    sources: ['malagen-nomination', 'voice-nomination', 'kerrfatou-forms', 'iec-candidates'],
+  },
+  {
+    id: 'team-gambia-flagbearer',
+    date: '2026-11-03',
+    title: 'Team Gambia elects a flagbearer',
+    description:
+      'Team Gambia Grand Coalition elects Lamin J. Darboe, leader of the National Unity Party, as its presidential candidate. A consensus attempt among seven aspirants failed, so the bloc’s Good Governance Committee held a vote and the executive committee ratified it. One aspirant, Amadou Kah, withdrew from the contest and the coalition.',
+    kind: 'campaign',
+    sources: ['point-team-gambia-flagbearer', 'alkamba-team-gambia'],
   },
   {
     id: 'campaign',
@@ -86,6 +95,15 @@ export const TIMELINE: TimelineEvent[] = [
     title: 'Official campaign period',
     description: 'Public campaigning runs for eighteen days under IEC rules on access to media and public spaces.',
     kind: 'campaign',
+    sources: ['malagen-nomination'],
+  },
+  {
+    id: 'withdrawal-deadline',
+    date: '2026-11-24',
+    title: 'Final deadline to withdraw',
+    description:
+      'Last date on which a nominated candidate may withdraw from the race. Reported by one explainer; the IEC notice governs.',
+    kind: 'legal',
     sources: ['malagen-nomination'],
   },
   {

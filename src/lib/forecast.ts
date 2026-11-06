@@ -168,8 +168,11 @@ export function structuralPrior(transferEfficiency: number): Shares {
 
   const udpBase = s.UDP ?? 0;
   const darboe = udpBase * (1 - uniteSplitOfUdp);
-  const bensoudaBase = udpBase * uniteSplitOfUdp + (s.NUP ?? 0);
-  const pdois = s.PDOIS ?? 0;
+  const bensoudaBase = udpBase * uniteSplitOfUdp;
+  // The NUP's 2021 vote sits with Team Gambia, because the NUP's leader is
+  // that bloc's flagbearer. It was previously attributed to UNITE, on the
+  // strength of the September memorandum between the two parties.
+  const pdois = (s.PDOIS ?? 0) + (s.NUP ?? 0);
 
   // Leakage: most of it demobilises or scatters; the rest defects to the
   // opposition blocs in proportion to their existing size.
@@ -182,7 +185,7 @@ export function structuralPrior(transferEfficiency: number): Shares {
     barrow: (s.NPP ?? 0) + transferred,
     darboe: darboe + share(darboe),
     bensouda: bensoudaBase + share(bensoudaBase),
-    'pdois-flagbearer': pdois + share(pdois),
+    'lj-darboe': pdois + share(pdois),
     other: scattered,
   });
 }
@@ -203,11 +206,11 @@ export function pollingPrior(undecidedToChallengers: number): Shares {
     barrow: poll.shares.barrow ?? 0,
     darboe: poll.shares.darboe ?? 0,
     bensouda: poll.shares.bensouda ?? 0,
-    'pdois-flagbearer': poll.shares['pdois-flagbearer'] ?? 0,
+    'lj-darboe': poll.shares['lj-darboe'] ?? 0,
     other: poll.shares.other ?? 0,
   };
 
-  const challengerKeys = ['darboe', 'bensouda', 'pdois-flagbearer'];
+  const challengerKeys = ['darboe', 'bensouda', 'lj-darboe'];
   const challengerTotal = challengerKeys.reduce((sum, k) => sum + (base[k] ?? 0), 0);
   const toChallengerPool = poll.undecided * toChallengers;
   const toIncumbent = poll.undecided - toChallengerPool;
@@ -304,7 +307,7 @@ export function centralShares(params: ScenarioParams): Shares {
   // Redistribute the mirror image of the incumbent's swing. The youth
   // component is weighted towards UNITE; the rest moves in proportion to
   // each challenger's existing size.
-  const challengerKeys = ['darboe', 'bensouda', 'pdois-flagbearer'];
+  const challengerKeys = ['darboe', 'bensouda', 'lj-darboe'];
   const challengerTotal = challengerKeys.reduce((sum, k) => sum + (blended[k] ?? 0), 0);
   const youthPortion = Math.min(Math.abs(youthSwing), Math.abs(actualSwing)) * Math.sign(-actualSwing);
   const uniteBonus = youthPortion * MODEL_CONSTANTS.youthEffectToUnite;
@@ -329,7 +332,7 @@ export function consolidateOpposition(shares: Shares, consolidation: number): Sh
   const k = Math.max(0, Math.min(1, consolidation / 100));
   if (k <= 0) return shares;
 
-  const challengerKeys = ['darboe', 'bensouda', 'pdois-flagbearer'];
+  const challengerKeys = ['darboe', 'bensouda', 'lj-darboe'];
   const ranked = challengerKeys
     .map((id) => ({ id, share: shares[id] ?? 0 }))
     .sort((a, b) => b.share - a.share);
@@ -475,8 +478,8 @@ export function projectRegions(
     const regionBase: Shares = normalise({
       barrow: (s.NPP ?? 0) + absorbed * te,
       darboe: (s.UDP ?? 0) * (1 - uniteSplit),
-      bensouda: (s.UDP ?? 0) * uniteSplit + (s.NUP ?? 0),
-      'pdois-flagbearer': s.PDOIS ?? 0,
+      bensouda: (s.UDP ?? 0) * uniteSplit,
+      'lj-darboe': (s.PDOIS ?? 0) + (s.NUP ?? 0),
       other: absorbed * (1 - te),
     });
 

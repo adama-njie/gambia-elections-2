@@ -217,6 +217,24 @@ describe('candidates', () => {
     for (const c of CANDIDATES_2026) expect(getParty(c.party), c.party).toBeDefined();
   });
 
+  it('gives every candidate a short label that is unique', () => {
+    // Two Darboes contest 2026, so a label derived from the surname would
+    // be ambiguous on a chart axis. The labels must be explicit and distinct.
+    const shorts = CANDIDATES_2026.map((c) => c.shortName);
+    for (const s of shorts) expect(s.length).toBeGreaterThan(0);
+    expect(new Set(shorts).size, 'duplicate shortName').toBe(shorts.length);
+  });
+
+  it('never lets two candidates share a bare surname without distinguishing them', () => {
+    const surnames = CANDIDATES_2026.map((c) => c.name.split(' ').slice(-1)[0]);
+    const dupes = surnames.filter((s, i) => surnames.indexOf(s) !== i);
+    for (const d of new Set(dupes)) {
+      const sharing = CANDIDATES_2026.filter((c) => c.name.endsWith(d));
+      const labels = sharing.map((c) => c.shortName);
+      expect(new Set(labels).size, `shared surname ${d} needs distinct labels`).toBe(labels.length);
+    }
+  });
+
   it('links every coalition reference to a real coalition', () => {
     const ids = new Set(COALITIONS.map((c) => c.id));
     for (const c of CANDIDATES_2026) {

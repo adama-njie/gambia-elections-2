@@ -57,7 +57,7 @@ describe('polling prior', () => {
 });
 
 describe('opposition consolidation', () => {
-  const base = { barrow: 50, darboe: 20, bensouda: 18, 'pdois-flagbearer': 4, other: 8 };
+  const base = { barrow: 50, darboe: 20, bensouda: 18, 'lj-darboe': 4, other: 8 };
 
   it('is a no-op at zero', () => {
     expect(consolidateOpposition(base, 0)).toEqual(base);
@@ -72,8 +72,8 @@ describe('opposition consolidation', () => {
 
   it('loses some vote to demobilisation rather than transferring it all', () => {
     const out = consolidateOpposition(base, 100);
-    const oppositionBefore = base.darboe + base.bensouda + base['pdois-flagbearer'];
-    const oppositionAfter = out.darboe! + out.bensouda! + out['pdois-flagbearer']!;
+    const oppositionBefore = base.darboe + base.bensouda + base['lj-darboe'];
+    const oppositionAfter = out.darboe! + out.bensouda! + out['lj-darboe']!;
     expect(oppositionAfter).toBeLessThan(oppositionBefore);
   });
 });

@@ -69,9 +69,10 @@ export const PARTIES: Party[] = [
     id: 'NUP',
     name: 'National Unity Party',
     founded: 2019,
-    leader: 'Abdoulie Ebrima Jammeh',
-    color: '#8D6E63',
-    profile: 'Small party; signed a memorandum of understanding with UNITE for the 2026 race.',
+    leader: 'Lamin J. Darboe',
+    color: '#F06292',
+    profile:
+      'Polled 0.96 per cent in 2021 under Abdoulie Ebrima Jammeh. Signed a memorandum of understanding with UNITE in September 2026, and its leader was then elected flagbearer of the rival Team Gambia Grand Coalition in November. The party says the UNITE memorandum still stands.',
     active: true,
   },
   {
@@ -193,26 +194,26 @@ export const COALITIONS: Coalition[] = [
     name: 'Coalition 2026',
     leadParty: 'UNITE',
     flagbearer: 'bensouda',
-    members: ['UNITE', 'PASTEF', 'PRP', 'NUP'],
+    members: ['UNITE', 'PASTEF', 'PRP'],
     formed: '2026-08-20',
     color: '#00ACC1',
     cohesion: 'formal',
     summary:
-      'Talib Bensouda emerged as flagbearer on 8 August 2026 after several parties withdrew from the wider talks, with partners signing on 20 August: PASTEF Gambia, Defending the Gambian Interest, the People’s Rights Party, FORWARD Gambia, the National Reform Congress, Gambia Movement for Progress, UNITE and Save The Gambia. UNITE separately signed a memorandum of understanding with the National Unity Party to contest 5 December jointly. Bensouda has ruled out rejoining the UDP while leaving the door open to opposition cooperation.',
-    sources: ['point-talib-flagbearer', 'kerrfatou-unite-nup', 'standard-landscape'],
+      'Talib Bensouda emerged as flagbearer on 8 August 2026, after Essa Faal withdrew hours before the vote, with partners signing on 20 August: PASTEF Gambia, Defending the Gambian Interest, the People’s Rights Party, FORWARD Gambia, the National Reform Congress, Gambia Movement for Progress, UNITE and Save The Gambia. The bloc has since lost ground: Gambia Movement for Progress withdrew, and the National Unity Party, which signed a memorandum with UNITE in September and had been named as a partner, saw its own leader elected flagbearer of the rival Team Gambia bloc in November. Bensouda has ruled out rejoining the UDP.',
+    sources: ['point-talib-flagbearer', 'kerrfatou-unite-nup', 'gambiaj-nup-unite', 'standard-landscape'],
   },
   {
     id: 'team-gambia',
     name: 'Team Gambia Grand Coalition 2026',
     leadParty: 'PDOIS',
-    flagbearer: 'pdois-flagbearer',
-    members: ['PDOIS'],
+    flagbearer: 'lj-darboe',
+    members: ['PDOIS', 'NUP'],
     formed: '2026-09-12',
     color: '#F06292',
-    cohesion: 'announced',
+    cohesion: 'formal',
     summary:
-      'Coordinated by Halifa Sallah and Sidia Jatta, founded on 12 September 2026 and announced on 18 September, with PDOIS among the party signatories. The bloc has said it will follow the 2016 model in which the flagbearer resigns from their party and stands as an independent, which means its ballot identity may differ from its party base.',
-    sources: ['point-grand-coalition', 'riotimes-three-camps'],
+      'Coordinated by Halifa Sallah and Sidia Jatta, founded on 12 September 2026 with PDOIS among the party signatories. On 3 November 2026 it elected Lamin J. Darboe, leader of the National Unity Party, as its flagbearer: a consensus attempt among seven aspirants failed, so the bloc’s Good Governance Committee ran a vote, and the executive committee ratified the result. He files his nomination on 11 November. One aspirant, Amadou Kah, withdrew from both the contest and the coalition. The choice cuts across the memorandum the NUP signed with UNITE in September, which the NUP says still stands.',
+    sources: ['point-team-gambia-flagbearer', 'alkamba-team-gambia', 'point-grand-coalition', 'riotimes-three-camps'],
   },
 ];
 
@@ -228,9 +229,12 @@ export const COALITION_MOVEMENTS: Record<string, string[]> = {
     'Defending the Gambian Interest (GDI)',
     'FORWARD Gambia',
     'National Reform Congress (NRC)',
-    'Gambia Movement for Progress',
     'Save The Gambia',
+    'Gambia Movement for Progress (withdrawn)',
   ],
   'gambia-first': ['Seven further parties and movements (memorandum of 14 August 2026)'],
-  'team-gambia': ['Further party and movement signatories announced 18 September 2026'],
+  'team-gambia': [
+    'Coordinated by Halifa Sallah and Sidia Jatta',
+    'Further party and movement signatories announced 18 September 2026',
+  ],
 };

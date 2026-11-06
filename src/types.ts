@@ -87,6 +87,11 @@ export interface Coalition {
 export interface Candidate2026 {
   id: string;
   name: string;
+  /**
+   * Short label for charts and stat tiles. Explicit rather than derived,
+   * because two candidates in 2026 share the surname Darboe.
+   */
+  shortName: string;
   /** Party id. */
   party: string;
   /** Coalition id, or null if standing alone. */
